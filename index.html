@@ -3,291 +3,347 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Functional HR System with Login</title>
+    <title>HR System - Design Showcase</title>
     <style>
+        /* --- FONT IMPORT & GLOBAL SETUP --- */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+
         :root {
-            --primary-bg: #3e4a3e;
-            --secondary-bg: #677967;
-            --content-bg: #EAE5D9;
+            --bg-dark-tint: #3e4a3e;
+            --sidebar-green: #677967;
+            --content-beige: #EAE5D9;
             --text-dark: #333;
             --text-light: #fff;
             --accent-green: #679469;
             --accent-yellow: #E4C147;
             --accent-red: #D96C6C;
-            --border-color: #ddd;
+            --border-color: #d1ccc0;
+            --shadow-color: rgba(0, 0, 0, 0.1);
         }
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark-tint);
+            color: var(--text-dark);
+            height: 100vh;
+            overflow: hidden;
+        }
         
-        body { margin: 0; font-family: 'Inter', sans-serif; background-color: var(--primary-bg); color: var(--text-dark); height: 100vh; overflow: hidden; }
-        .hidden { display: none !important; }
+        /* --- LOGIN PAGE DESIGN --- */
+        .login-page {
+            display: flex; /* Set to 'none' to hide this page */
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            background-color: var(--content-beige);
+        }
+        .login-container {
+            background: white;
+            padding: 40px 50px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px var(--shadow-color);
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+        }
+        .login-container h1 {
+            color: var(--bg-dark-tint);
+            margin-top: 0;
+            margin-bottom: 35px;
+            font-size: 2em;
+        }
+        .login-container .form-group {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+        .login-container label {
+            font-weight: 500;
+            margin-bottom: 8px;
+            display: block;
+        }
+        .login-container input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-sizing: border-box;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .login-container input:focus {
+            outline: none;
+            border-color: var(--sidebar-green);
+            box-shadow: 0 0 0 3px rgba(103, 121, 103, 0.2);
+        }
+        .login-btn {
+            width: 100%;
+            padding: 15px;
+            margin-top: 10px;
+            border-radius: 25px;
+            border: none;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .login-btn.primary {
+            background-color: var(--sidebar-green);
+            color: white;
+        }
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px var(--shadow-color);
+        }
 
-        /* --- LOGIN PAGE STYLES --- */
-        #loginPage { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; background-color: var(--content-bg); }
-        .login-container { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); text-align: center; width: 100%; max-width: 400px; }
-        .login-container h1 { color: var(--primary-bg); margin-bottom: 30px; }
-        .login-container .form-group { text-align: left; margin-bottom: 20px; }
-        .login-container label { font-weight: 500; margin-bottom: 5px; display: block; }
-        .login-container input { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; box-sizing: border-box; }
-        .login-container .login-btn { width: 100%; padding: 15px; border-radius: 8px; border: none; font-size: 1em; font-weight: bold; cursor: pointer; transition: background-color 0.2s; }
-        .login-btn.primary { background-color: var(--secondary-bg); color: white; margin-bottom: 15px; }
-        .login-btn.secondary { background-color: transparent; color: var(--secondary-bg); border: 1px solid var(--secondary-bg); }
-        #login-error { color: var(--accent-red); margin-top: 15px; min-height: 20px; }
-
-        /* --- SHARED APP STYLES --- */
-        .app-shell { display: flex; width: 100%; height: 100%; padding: 20px; box-sizing: border-box; }
-        .sidebar { width: 250px; background-color: var(--secondary-bg); border-radius: 12px; padding: 20px; display: flex; flex-direction: column; color: var(--text-light); flex-shrink: 0; }
-        .main-content { flex-grow: 1; background-color: var(--content-bg); margin-left: 20px; border-radius: 12px; padding: 30px; overflow-y: auto; }
-        .sidebar-header { font-size: 1.5em; font-weight: bold; margin-bottom: 40px; }
+        /* --- MAIN APP SHELL DESIGN --- */
+        .app-shell {
+            display: none; /* Set to 'flex' to show this page */
+            width: 100%;
+            height: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        
+        /* --- SIDEBAR DESIGN --- */
+        .sidebar {
+            width: 250px;
+            background-color: var(--sidebar-green);
+            border-radius: 12px;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            color: var(--text-light);
+            flex-shrink: 0;
+        }
+        .sidebar-header {
+            font-size: 1.6em;
+            font-weight: 700;
+            margin-bottom: 40px;
+        }
         .sidebar-nav ul { list-style: none; padding: 0; margin: 0; }
-        .sidebar-nav li { padding: 15px 10px; border-radius: 8px; margin-bottom: 10px; cursor: pointer; transition: background-color 0.2s; }
-        .sidebar-nav li:hover { background-color: rgba(255, 255, 255, 0.1); }
-        .sidebar-nav .active { background-color: var(--primary-bg); font-weight: bold; }
-        .sidebar-footer { margin-top: auto; padding: 15px 10px; cursor: pointer; border-radius: 8px; }
-        .main-content h1, .main-content h2 { margin-top: 0; color: var(--primary-bg); }
-        .data-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        .data-table th, .data-table td { padding: 15px; text-align: left; border-bottom: 1px solid var(--border-color); }
-        .data-table th { background-color: var(--primary-bg); color: var(--text-light); }
-        .data-table th:first-child { border-top-left-radius: 8px; }
-        .data-table th:last-child { border-top-right-radius: 8px; }
-        .data-table tbody tr { cursor: pointer; }
-        .data-table tbody tr:hover { background-color: #e0dace; }
-        .data-table tbody tr.selected { background-color: #c8bdae; font-weight: bold; }
-        .action-btn { padding: 10px 25px; border-radius: 20px; border: none; color: white; font-weight: bold; cursor: pointer; transition: transform 0.2s, background-color 0.2s; }
-        .action-btn:disabled { background-color: #aaa; cursor: not-allowed; }
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px; }
-        .actions { display: flex; gap: 10px; flex-wrap: wrap; }
-        .search-bar { padding: 10px 15px; border-radius: 20px; border: 1px solid var(--border-color); width: 250px; }
+        .sidebar-nav li {
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.2s, transform 0.2s;
+        }
+        .sidebar-nav li:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+        }
+        .sidebar-nav .active {
+            background-color: var(--bg-dark-tint);
+            font-weight: 700;
+        }
+        .sidebar-footer {
+            margin-top: auto;
+            padding: 15px 20px;
+            cursor: pointer;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+        .sidebar-footer:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
 
-        /* --- EMPLOYEE DASHBOARD STYLES --- */
-        .profile-card { background: white; padding: 25px; border-radius: 8px; }
-        .profile-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
-        .profile-grid p { margin: 5px 0; font-size: 1.1em; }
-        .profile-grid strong { color: var(--primary-bg); display: block; font-size: 0.9em; margin-bottom: 4px; }
-        .employee-nav-tabs { display: flex; gap: 5px; border-bottom: 2px solid var(--border-color); margin-bottom: 25px; }
-        .employee-nav-tabs .tab { padding: 10px 20px; cursor: pointer; border-radius: 8px 8px 0 0; background-color: #e0dace; }
-        .employee-nav-tabs .tab.active { background-color: var(--secondary-bg); color: white; font-weight: bold; }
+        /* --- MAIN CONTENT DESIGN --- */
+        .main-content {
+            flex-grow: 1;
+            background-color: var(--content-beige);
+            margin-left: 20px;
+            border-radius: 12px;
+            padding: 30px 40px;
+            overflow-y: auto;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        /* The unique dashed title from the Figma design */
+        h1.page-title {
+            margin: 0;
+            font-size: 2.25em; /* 40px / 16px */
+            color: #494949;
+            border: 2px dashed #a0a0a0;
+            padding: 5px 20px;
+            user-select: none;
+        }
+        .actions { display: flex; align-items: center; gap: 15px; }
+        .search-bar {
+            padding: 12px 20px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            width: 250px;
+            font-size: 1em;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .search-bar:focus {
+            outline: none;
+            border-color: var(--sidebar-green);
+            box-shadow: 0 0 0 3px rgba(103, 121, 103, 0.2);
+        }
+        .action-btn {
+            padding: 12px 30px;
+            border-radius: 20px;
+            border: none;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 2px 8px var(--shadow-color);
+        }
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px var(--shadow-color);
+        }
+        .add-btn { background-color: var(--accent-green); }
+        .update-btn { background-color: var(--accent-yellow); }
+        .archive-btn { background-color: var(--accent-red); }
+
+        /* --- TABLE DESIGN --- */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .data-table th, .data-table td {
+            padding: 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .data-table thead th {
+            background-color: var(--bg-dark-tint);
+            color: var(--text-light);
+            font-weight: 500;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .data-table thead th:first-child { border-top-left-radius: 8px; }
+        .data-table thead th:last-child { border-top-right-radius: 8px; }
+        .data-table tbody tr { transition: background-color 0.2s; }
+        .data-table tbody tr:nth-child(even) { background-color: #F5F2EA; }
+        .data-table tbody tr:hover { background-color: #e7e2d6; cursor: pointer; }
+        .data-table tbody tr.selected {
+            background-color: #d8cfbc;
+            font-weight: 500;
+        }
 
     </style>
 </head>
 <body>
-
-    <!-- =========== LOGIN PAGE (STARTS HERE) =========== -->
-    <div id="loginPage">
+    
+    <!-- To see the app, change `display: flex` to `display: none` on this login-page div -->
+    <div class="login-page" style="display: none;">
         <div class="login-container">
             <h1>HR System Login</h1>
-            <form id="loginForm">
-                <div class="form-group">
-                    <label for="username">Username</label>
-                    <input type="text" id="username" value="janesmith">
-                </div>
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" value="password123">
-                </div>
-                 <p id="login-error">&nbsp;</p> <!-- For spacing -->
-                <button type="submit" class="login-btn primary">Login as Employee</button>
-                <button type="button" id="adminLoginBtn" class="login-btn secondary">Login as HR Admin</button>
-            </form>
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" value="janesmith">
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" value="password123">
+            </div>
+            <button class="login-btn primary">Login</button>
         </div>
     </div>
 
-    <!-- =========== HR ADMIN PAGE (Initially Hidden) =========== -->
-    <div id="hrAdminPage" class="app-shell hidden">
+    <!-- To see the app, change `display: none` to `display: flex` on this app-shell div -->
+    <div class="app-shell" style="display: flex;">
+        <!-- =========== SIDEBAR =========== -->
         <aside class="sidebar">
             <div class="sidebar-header">WeekendMatcha</div>
-            <nav class="sidebar-nav"><ul><li class="active">Human Resource</li></ul></nav>
-            <div class="sidebar-footer logout-btn">&#8592; Log Out</div>
-        </aside>
-        <main class="main-content">
-             <div class="header">
-                <h1 id="main-title">Employee Management</h1>
-                <div class="actions">
-                    <input type="text" class="search-bar" id="searchBar" placeholder="&#128269; Search by Name">
-                    <button id="addBtn" class="action-btn" style="background-color: var(--accent-green);">ADD</button>
-                    <button id="updateBtn" class="action-btn" style="background-color: var(--accent-yellow);" disabled>UPDATE</button>
-                    <button id="archiveBtn" class="action-btn" style="background-color: var(--accent-red);" disabled>ARCHIVE</button>
-                    <button id="viewLogBtn" class="action-btn" style="background-color: #5a7a9c;">View Archive Log</button>
-                </div>
-            </div>
-            <div id="employeeTableContainer">
-                <table class="data-table"><thead><tr><th>EmployeeID</th><th>Full Name</th><th>Role</th><th>Status</th><th>Date Hired</th><th>Contact</th></tr></thead><tbody id="employeeTableBody"></tbody></table>
-            </div>
-            <div id="archiveLogContainer" class="hidden"><table class="data-table"><thead><tr><th>LogID</th><th>EmployeeID</th><th>Archived Date</th><th>Reason</th></tr></thead><tbody id="archiveLogTableBody"></tbody></table></div>
-        </main>
-    </div>
-    
-    <!-- =========== EMPLOYEE DASHBOARD PAGE (Initially Hidden) =========== -->
-    <div id="employeePage" class="app-shell hidden">
-        <aside class="sidebar">
-            <div class="sidebar-header" id="employee-sidebar-name">Employee Name</div>
             <nav class="sidebar-nav">
                 <ul>
-                    <li class="tab-link active" data-tab="profile">My Profile</li>
-                    <li class="tab-link" data-tab="attendance">Attendance Log</li>
+                    <li>Inventory</li>
+                    <li>Sales</li>
+                    <li class="active">Human Resource</li>
                 </ul>
             </nav>
-            <div class="sidebar-footer logout-btn">&#8592; Log Out</div>
+            <div class="sidebar-footer">&#8592; Log Out</div>
         </aside>
+
+        <!-- =========== MAIN CONTENT =========== -->
         <main class="main-content">
-            <!-- Profile Tab Content -->
-            <div id="profile-tab" class="tab-content">
-                <h2>My Profile</h2>
-                <div class="profile-card">
-                    <div class="profile-grid" id="employee-profile-details">
-                        <!-- Employee details will be rendered here -->
-                    </div>
+            <div class="header">
+                <h1 class="page-title">Inventory Management</h1>
+                <div class="actions">
+                    <input type="text" class="search-bar" placeholder="&#128269; Search">
+                    <button class="action-btn add-btn">ADD</button>
+                    <button class="action-btn update-btn">UPDATE</button>
+                    <button class="action-btn archive-btn">ARCHIVE</button>
                 </div>
             </div>
-            <!-- Attendance Tab Content -->
-            <div id="attendance-tab" class="tab-content hidden">
-                <h2>My Attendance Log</h2>
-                <table class="data-table">
-                    <thead><tr><th>Date</th><th>Time In</th><th>Time Out</th><th>Hours Worked</th></tr></thead>
-                    <tbody id="employee-attendance-log">
-                        <!-- Attendance data will be rendered here -->
-                    </tbody>
-                </table>
-            </div>
+
+            <!-- Employee Data Table -->
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ItemID</th>
+                        <th>Item</th>
+                        <th>Category</th>
+                        <th>Quantity</th>
+                        <th>Stock In</th>
+                        <th>UoM</th>
+                        <th>Unit Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>IT2001</td>
+                        <td>Blueberries</td>
+                        <td>Ingredients</td>
+                        <td>700</td>
+                        <td>OCT-10-2025, 2:00PM</td>
+                        <td>kg</td>
+                        <td>380.00</td>
+                    </tr>
+                    <tr class="selected"> <!-- Example of a selected row -->
+                        <td>IT2002</td>
+                        <td>Strawberry</td>
+                        <td>Ingredients</td>
+                        <td>500</td>
+                        <td>OCT-10-2025, 2:00PM</td>
+                        <td>kg</td>
+                        <td>380.00</td>
+                    </tr>
+                    <tr>
+                        <td>PKG3001</td>
+                        <td>Container</td>
+                        <td>Packaging</td>
+                        <td>500</td>
+                        <td>OCT-10-2025, 2:00PM</td>
+                        <td>pc</td>
+                        <td>40.00</td>
+                    </tr>
+                    <tr>
+                        <td>IT2003</td>
+                        <td>Matcha Powder</td>
+                        <td>Ingredients</td>
+                        <td>400</td>
+                        <td>OCT-10-2025, 2:00PM</td>
+                        <td>kg</td>
+                        <td>880.00</td>
+                    </tr>
+                    <tr>
+                        <td>IT2001</td>
+                        <td>Pistachio</td>
+                        <td>Ingredients</td>
+                        <td>600</td>
+                        <td>OCT-10-2025, 2:00PM</td>
+                        <td>kg</td>
+                        <td>380.00</td>
+                    </tr>
+                </tbody>
+            </table>
         </main>
     </div>
 
-
-    <!-- (MODALS AND OTHER HIDDEN ELEMENTS - UNCHANGED FROM PREVIOUS VERSION) -->
-    <div id="employeeModal" class="modal hidden" style="display:none;">...</div>
-    <div id="archiveModal" class="modal hidden" style="display:none;">...</div>
-
-    <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        // --- MOCK DATABASE (based on Class Diagrams) ---
-        let employees = [
-            { id: 'EMP1001', fname: 'John', lname: 'Doe', address: '123 Main St', contact: '555-0101', username: 'johndoe', password: 'password123', role: 'HR Admin', status: 'Active', dateHired: '2025-10-10' },
-            { id: 'EMP1002', fname: 'Jane', lname: 'Smith', address: '456 Oak Ave', contact: '555-0102', username: 'janesmith', password: 'password123', role: 'Sales Associate', status: 'Active', dateHired: '2025-10-15', shift: '10:00 AM - 6:00 PM' },
-            { id: 'EMP1003', fname: 'Peter', lname: 'Jones', address: '789 Pine Ln', contact: '555-0103', username: 'peterjones', password: 'password123', role: 'Inventory Manager', status: 'On Leave', dateHired: '2025-09-01', shift: '8:00 AM - 4:00 PM' },
-        ];
-        let archivedLogs = [];
-        const attendanceData = {
-            'EMP1002': [
-                { date: '2025-10-27', timeIn: '10:05 AM', timeOut: '6:02 PM', hours: '7.95' },
-                { date: '2025-10-28', timeIn: '09:58 AM', timeOut: '6:05 PM', hours: '8.07' },
-                { date: '2025-10-29', timeIn: '10:01 AM', timeOut: '5:55 PM', hours: '7.90' },
-            ]
-        };
-        let selectedEmployeeId = null;
-        let loggedInEmployee = null;
-
-        // --- PAGE/VIEW SELECTORS ---
-        const loginPage = document.getElementById('loginPage');
-        const hrAdminPage = document.getElementById('hrAdminPage');
-        const employeePage = document.getElementById('employeePage');
-
-        // --- LOGIN LOGIC ---
-        const loginForm = document.getElementById('loginForm');
-        const adminLoginBtn = document.getElementById('adminLoginBtn');
-        const loginError = document.getElementById('login-error');
-
-        loginForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            const user = employees.find(emp => emp.username === username && emp.password === password);
-
-            if (user) {
-                loggedInEmployee = user;
-                showEmployeeDashboard(user);
-            } else {
-                loginError.textContent = 'Invalid username or password.';
-            }
-        });
-
-        adminLoginBtn.addEventListener('click', () => {
-            showHrAdminDashboard();
-        });
-
-        document.querySelectorAll('.logout-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                loggedInEmployee = null;
-                loginPage.classList.remove('hidden');
-                hrAdminPage.classList.add('hidden');
-                employeePage.classList.add('hidden');
-            });
-        });
-
-        const showHrAdminDashboard = () => {
-            loginPage.classList.add('hidden');
-            employeePage.classList.add('hidden');
-            hrAdminPage.classList.remove('hidden');
-            renderAdminTable(); // Initial render for admin view
-        };
-        
-        const showEmployeeDashboard = (user) => {
-            loginPage.classList.add('hidden');
-            hrAdminPage.classList.add('hidden');
-            employeePage.classList.remove('hidden');
-            renderEmployeeDashboard(user);
-        };
-        
-        // --- EMPLOYEE DASHBOARD RENDERING LOGIC ---
-        const renderEmployeeDashboard = (user) => {
-            // Update sidebar name
-            document.getElementById('employee-sidebar-name').textContent = `${user.fname} ${user.lname}`;
-
-            // Render profile details
-            const profileDetails = document.getElementById('employee-profile-details');
-            profileDetails.innerHTML = `
-                <div><p><strong>Employee ID</strong> ${user.id}</p></div>
-                <div><p><strong>Full Name</strong> ${user.fname} ${user.lname}</p></div>
-                <div><p><strong>Role</strong> ${user.role}</p></div>
-                <div><p><strong>Status</strong> ${user.status}</p></div>
-                <div><p><strong>Date Hired</strong> ${user.dateHired}</p></div>
-                <div><p><strong>Contact Number</strong> ${user.contact}</p></div>
-                <div><p><strong>Address</strong> ${user.address}</p></div>
-                <div><p><strong>Shift Schedule</strong> ${user.shift || 'N/A'}</p></div>
-            `;
-
-            // Render attendance log
-            const attendanceLog = document.getElementById('employee-attendance-log');
-            attendanceLog.innerHTML = ''; // Clear previous logs
-            const userAttendance = attendanceData[user.id] || [];
-            if (userAttendance.length > 0) {
-                userAttendance.forEach(log => {
-                    attendanceLog.innerHTML += `<tr><td>${log.date}</td><td>${log.timeIn}</td><td>${log.timeOut}</td><td>${log.hours}</td></tr>`;
-                });
-            } else {
-                attendanceLog.innerHTML = `<tr><td colspan="4" style="text-align:center;">No attendance records found.</td></tr>`;
-            }
-        };
-        
-        // Employee dashboard tab switching
-        document.querySelectorAll('.tab-link').forEach(tabLink => {
-            tabLink.addEventListener('click', () => {
-                document.querySelectorAll('.tab-link').forEach(tl => tl.classList.remove('active'));
-                tabLink.classList.add('active');
-                
-                const tabToShow = tabLink.dataset.tab;
-                document.querySelectorAll('.tab-content').forEach(content => {
-                    if (content.id === `${tabToShow}-tab`) {
-                        content.classList.remove('hidden');
-                    } else {
-                        content.classList.add('hidden');
-                    }
-                });
-            });
-        });
-
-        // --- HR ADMIN FUNCTIONS (Condensed for brevity - they are unchanged) ---
-        const employeeTableBody = document.getElementById('employeeTableBody');
-        const renderAdminTable = () => {
-            employeeTableBody.innerHTML = '';
-            employees.forEach(emp => {
-                employeeTableBody.innerHTML += `<tr data-id="${emp.id}"><td>${emp.id}</td><td>${emp.fname} ${emp.lname}</td><td>${emp.role}</td><td>${emp.status}</td><td>${emp.dateHired}</td><td>${emp.contact}</td></tr>`;
-            });
-            // Add click listeners to rows for selection functionality (not shown for brevity)
-        };
-
-        // --- INITIAL STATE ---
-        // On load, only the login page is visible. The rest is handled by user actions.
-        
-    });
-    </script>
 </body>
 </html>
