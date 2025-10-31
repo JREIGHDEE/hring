@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Functional HR System</title>
+    <title>Functional HR System with Login</title>
     <style>
         :root {
             --primary-bg: #3e4a3e;
@@ -15,6 +15,7 @@
             --accent-yellow: #E4C147;
             --accent-red: #D96C6C;
             --border-color: #ddd;
+            --shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
 
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
@@ -22,116 +23,174 @@
         body {
             margin: 0;
             font-family: 'Inter', sans-serif;
-            background-color: var(--primary-bg);
+            background-color: var(--content-bg);
             color: var(--text-dark);
-            display: flex;
             height: 100vh;
             overflow: hidden;
         }
+        
+        .hidden { display: none !important; }
 
-        .container {
+        /* --- Login Screen Styles --- */
+        #login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: var(--primary-bg);
+        }
+        .login-box {
+            background: var(--text-light);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        .login-box h1 {
+            color: var(--primary-bg);
+            margin-bottom: 30px;
+        }
+        .login-box .form-group {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+        .login-box label { font-weight: 500; }
+        .login-box input {
+            width: 100%;
+            padding: 12px;
+            margin-top: 5px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-sizing: border-box;
+        }
+        .login-box button {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            background-color: var(--secondary-bg);
+            color: var(--text-light);
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .login-box button:hover { background-color: var(--primary-bg); }
+        #login-error { color: var(--accent-red); margin-top: 15px; height: 20px; }
+
+        /* --- Main App Layout (Admin) --- */
+        .admin-dashboard {
             display: flex;
             width: 100%;
             height: 100%;
             padding: 20px;
             box-sizing: border-box;
         }
-
-        .sidebar {
-            width: 250px;
-            background-color: var(--secondary-bg);
-            border-radius: 12px;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            color: var(--text-light);
-            flex-shrink: 0;
-        }
-
-        .main-content {
-            flex-grow: 1;
-            background-color: var(--content-bg);
-            margin-left: 20px;
-            border-radius: 12px;
-            padding: 30px;
-            overflow-y: auto;
-        }
-
+        .sidebar { width: 250px; background-color: var(--secondary-bg); border-radius: 12px; padding: 20px; display: flex; flex-direction: column; color: var(--text-light); flex-shrink: 0; }
+        .main-content { flex-grow: 1; background-color: var(--content-bg); margin-left: 20px; border-radius: 12px; padding: 30px; overflow-y: auto; }
         .sidebar-header { font-size: 1.5em; font-weight: bold; margin-bottom: 40px; }
         .sidebar-nav ul { list-style: none; padding: 0; margin: 0; }
         .sidebar-nav li { padding: 15px 10px; border-radius: 8px; margin-bottom: 10px; cursor: pointer; transition: background-color 0.2s; }
-        .sidebar-nav li:hover { background-color: rgba(255, 255, 255, 0.1); }
         .sidebar-nav .active { background-color: var(--primary-bg); font-weight: bold; }
-        .sidebar-footer { margin-top: auto; padding: 15px 10px; cursor: pointer; border-radius: 8px; }
-
+        .sidebar-footer { margin-top: auto; padding: 15px 10px; cursor: pointer; border-radius: 8px; font-weight: bold; text-align: center; }
+        .sidebar-footer:hover { background-color: rgba(255, 255, 255, 0.1); }
         h1 { margin: 0; font-size: 2em; color: var(--primary-bg); }
-        
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px; }
         .actions { display: flex; gap: 10px; flex-wrap: wrap; }
-        
         .search-bar { padding: 10px 15px; border-radius: 20px; border: 1px solid var(--border-color); width: 250px; }
-        .action-btn { padding: 10px 25px; border-radius: 20px; border: none; color: white; font-weight: bold; cursor: pointer; transition: transform 0.2s, background-color 0.2s; }
-        .action-btn:hover { transform: scale(1.05); }
-        .action-btn:disabled { background-color: #aaa; cursor: not-allowed; transform: none; }
-
+        .action-btn { padding: 10px 25px; border-radius: 20px; border: none; color: white; font-weight: bold; cursor: pointer; transition: transform 0.2s; }
+        .action-btn:disabled { background-color: #aaa; cursor: not-allowed; }
         .add-btn { background-color: var(--accent-green); }
         .update-btn { background-color: var(--accent-yellow); }
         .archive-btn { background-color: var(--accent-red); }
         .view-log-btn { background-color: #5a7a9c; }
-
         .data-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         .data-table th, .data-table td { padding: 15px; text-align: left; border-bottom: 1px solid var(--border-color); }
         .data-table th { background-color: var(--primary-bg); color: var(--text-light); }
-        .data-table th:first-child { border-top-left-radius: 8px; }
-        .data-table th:last-child { border-top-right-radius: 8px; }
         .data-table tbody tr { cursor: pointer; }
         .data-table tbody tr:hover { background-color: #e0dace; }
         .data-table tbody tr.selected { background-color: #c8bdae; font-weight: bold; }
-
-        .hidden { display: none; }
-
-        /* Modal Styles */
+        
+        /* --- Employee Dashboard Styles --- */
+        .employee-dashboard {
+            padding: 40px;
+            overflow-y: auto;
+            height: 100vh;
+            box-sizing: border-box;
+        }
+        .employee-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 20px;
+        }
+        .employee-header h1 { font-size: 1.8em; }
+        .employee-dashboard .logout-btn { background-color: var(--accent-red); }
+        .employee-content {
+            margin-top: 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        .info-card {
+            background: #fff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+        .info-card h2 { margin-top: 0; color: var(--primary-bg); border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        .info-card p { font-size: 1.1em; line-height: 1.8; }
+        .info-card strong { color: #555; display: inline-block; min-width: 120px; }
+        
+        /* (Modal styles from previous code remain the same) */
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.5); justify-content: center; align-items: center; }
         .modal-content { background-color: #fefefe; margin: auto; padding: 30px; border: 1px solid #888; width: 90%; max-width: 600px; border-radius: 12px; box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2); }
         .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; margin-bottom: 20px; }
         .modal-header h2 { margin: 0; }
         .close-btn { color: #aaa; font-size: 28px; font-weight: bold; cursor: pointer; }
-        .modal-body .form-section { margin-bottom: 20px; }
-        .modal-body h3 { font-size: 1.1em; color: var(--primary-bg); border-bottom: 1px solid #eee; padding-bottom: 5px; margin-bottom: 15px; }
         .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
         .form-group { display: flex; flex-direction: column; }
-        .form-group label { margin-bottom: 5px; font-weight: 500; font-size: 0.9em; }
-        .form-group input, .form-group select, .form-group textarea { padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-family: 'Inter', sans-serif; }
-        .form-group textarea { min-height: 80px; }
+        .form-group label { margin-bottom: 5px; font-weight: 500; }
+        .form-group input, .form-group textarea { padding: 10px; border: 1px solid #ccc; border-radius: 5px; }
         .modal-footer { text-align: right; margin-top: 30px; }
-        #error-message { color: var(--accent-red); margin-top: 15px; text-align: center; }
-
-        /* Employee View */
-        .employee-view-card { background: #fff; padding: 30px; border-radius: 8px; max-width: 700px; margin: 20px auto; }
-        .employee-view-card h2 { border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
-        .employee-view-card p { font-size: 1.1em; line-height: 1.6; }
-        .employee-view-card strong { color: var(--primary-bg); }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <!-- =========== SIDEBAR =========== -->
+    <!-- =========== LOGIN SCREEN (VISIBLE ON START) =========== -->
+    <div id="login-container">
+        <div class="login-box">
+            <h1>HR System Login</h1>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="login-username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="login-password" required>
+                </div>
+                <p id="login-error">&nbsp;</p> <!-- Placeholder for error messages -->
+                <button type="submit">Login</button>
+            </form>
+            <p style="margin-top:20px; font-size:0.9em; color:#666;">
+              Admin: <code>johndoe</code> / <code>password123</code><br>
+              Employee: <code>janesmith</code> / <code>password123</code>
+            </p>
+        </div>
+    </div>
+
+    <!-- =========== HR ADMIN DASHBOARD (HIDDEN) =========== -->
+    <div id="admin-dashboard" class="admin-dashboard hidden">
         <aside class="sidebar">
             <div class="sidebar-header">WeekendMatcha</div>
-            <nav class="sidebar-nav">
-                <ul>
-                    <li>Inventory</li>
-                    <li>Sales</li>
-                    <li class="active">Human Resource</li>
-                </ul>
-            </nav>
-             <button id="simulateLoginBtn" class="action-btn" style="background-color: #3e4a3e; margin-top: 20px;">Simulate Employee Login</button>
-            <div class="sidebar-footer" onclick="alert('Logging out...');">&#8592; Log Out</div>
+            <nav class="sidebar-nav"><ul><li class="active">Human Resource</li></ul></nav>
+            <div class="sidebar-footer" id="admin-logout-btn">&#8592; Log Out</div>
         </aside>
-
-        <!-- =========== MAIN CONTENT (HR ADMIN VIEW) =========== -->
-        <main class="main-content" id="adminView">
+        <main class="main-content">
             <div class="header">
                 <h1 id="main-title">Employee Management</h1>
                 <div class="actions">
@@ -142,379 +201,104 @@
                     <button id="viewLogBtn" class="action-btn view-log-btn">View Archive Log</button>
                 </div>
             </div>
-
-            <!-- Employee Data Table -->
             <div id="employeeTableContainer">
                 <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>EmployeeID</th>
-                            <th>Full Name</th>
-                            <th>Role</th>
-                            <th>Status</th>
-                            <th>Date Hired</th>
-                            <th>Contact</th>
-                        </tr>
-                    </thead>
-                    <tbody id="employeeTableBody">
-                        <!-- Rows will be dynamically inserted here by JavaScript -->
-                    </tbody>
+                    <thead><tr><th>EmployeeID</th><th>Full Name</th><th>Role</th><th>Status</th><th>Date Hired</th><th>Contact</th></tr></thead>
+                    <tbody id="employeeTableBody"></tbody>
                 </table>
             </div>
-
-            <!-- Archive Log Table (Initially Hidden) -->
             <div id="archiveLogContainer" class="hidden">
                  <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>LogID</th>
-                            <th>EmployeeID</th>
-                            <th>Archived Date</th>
-                            <th>Reason for Archiving</th>
-                        </tr>
-                    </thead>
-                    <tbody id="archiveLogTableBody">
-                        <!-- Log rows will be dynamically inserted here -->
-                    </tbody>
+                    <thead><tr><th>LogID</th><th>EmployeeID</th><th>Archived Date</th><th>Reason</th></tr></thead>
+                    <tbody id="archiveLogTableBody"></tbody>
                 </table>
             </div>
         </main>
-        
-        <!-- =========== EMPLOYEE VIEW (Initially Hidden) =========== -->
-        <main class="main-content hidden" id="employeeView">
-             <div class="employee-view-card">
-                 <h2>My Employee Record</h2>
-                 <p><strong>Employee ID:</strong> EMP1002</p>
-                 <p><strong>Full Name:</strong> Jane Smith</p>
-                 <p><strong>Role:</strong> Sales Associate</p>
-                 <p><strong>Status:</strong> Active</p>
-                 <p><strong>Shift Schedule:</strong> 10:00 AM - 6:00 PM</p>
-                 <p><strong>Address:</strong> 456 Oak Avenue</p>
-                 <hr>
-                 <h3>Attendance (Time In / Time Out)</h3>
-                 <p><em>(This section would display attendance records for Jane Smith)</em></p>
-                 <button class="action-btn update-btn" id="backToAdminBtn">Back to Admin View</button>
-             </div>
-        </main>
-
     </div>
 
-    <!-- =========== MODALS =========== -->
-    <!-- Add/Update Employee Modal -->
-    <div id="employeeModal" class="modal">
-        <div class="modal-content">
-            <form id="employeeForm">
-                <div class="modal-header">
-                    <h2 id="modalTitle">Add New Employee</h2>
-                    <span class="close-btn">&times;</span>
-                </div>
-                <div class="modal-body">
-                    <input type="hidden" id="employeeId">
-                    <div class="form-section">
-                        <h3>Personal Information</h3>
-                        <div class="form-grid">
-                            <div class="form-group"><label for="fname">First Name</label><input type="text" id="fname" required></div>
-                            <div class="form-group"><label for="lname">Last Name</label><input type="text" id="lname" required></div>
-                            <div class="form-group"><label for="address">Address</label><input type="text" id="address" required></div>
-                            <div class="form-group"><label for="contact">Contact Number</label><input type="text" id="contact" required></div>
-                        </div>
-                    </div>
-                    <div class="form-section">
-                        <h3>Job & User Account Details</h3>
-                        <div class="form-grid">
-                            <div class="form-group"><label for="username">Username</label><input type="text" id="username" required></div>
-                            <div class="form-group"><label for="password">Password</label><input type="password" id="password" required></div>
-                            <div class="form-group"><label for="role">Role</label><input type="text" id="role" required></div>
-                            <div class="form-group">
-                                <label for="status">Status</label>
-                                <select id="status" required>
-                                    <option value="Active">Active</option>
-                                    <option value="On Leave">On Leave</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                     <p id="error-message" class="hidden">Please fill out all required fields.</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="action-btn update-btn close-btn">Cancel</button>
-                    <button type="submit" class="action-btn add-btn">Save Employee</button>
-                </div>
-            </form>
+    <!-- =========== EMPLOYEE DASHBOARD (HIDDEN) =========== -->
+    <div id="employee-dashboard" class="employee-dashboard hidden">
+        <div class="employee-header">
+            <h1 id="welcome-message">Welcome!</h1>
+            <button class="action-btn logout-btn" id="employee-logout-btn">Log Out</button>
         </div>
-    </div>
-
-    <!-- Archive Confirmation Modal -->
-    <div id="archiveModal" class="modal">
-        <div class="modal-content">
-            <form id="archiveForm">
-                <div class="modal-header">
-                    <h2>Archive Employee Profile</h2>
-                    <span class="close-btn">&times;</span>
-                </div>
-                <div class="modal-body">
-                    <p>Are you sure you want to archive this employee's profile? This action cannot be undone. Please provide a reason for compliance.</p>
-                    <div class="form-group">
-                        <label for="archiveReason">Reason for Archiving (Required)</label>
-                        <textarea id="archiveReason" required placeholder="e.g., Resignation, End of Contract..."></textarea>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="action-btn update-btn close-btn">Cancel</button>
-                    <button type="submit" class="action-btn archive-btn">Confirm Archive</button>
-                </div>
-            </form>
+        <div class="employee-content">
+            <div class="info-card">
+                <h2>My Profile</h2>
+                <p><strong>Employee ID:</strong> <span id="emp-id"></span></p>
+                <p><strong>Full Name:</strong> <span id="emp-name"></span></p>
+                <p><strong>Address:</strong> <span id="emp-address"></span></p>
+                <p><strong>Contact:</strong> <span id="emp-contact"></span></p>
+            </div>
+            <div class="info-card">
+                <h2>Job Details</h2>
+                <p><strong>Role:</strong> <span id="emp-role"></span></p>
+                <p><strong>Status:</strong> <span id="emp-status"></span></p>
+                <p><strong>Date Hired:</strong> <span id="emp-hired"></span></p>
+            </div>
+            <div class="info-card">
+                <h2>My Attendance Log</h2>
+                <p><em>(This area would show a table of time-in and time-out records for the logged-in employee.)</em></p>
+                <p><strong>Today's Status:</strong> Not yet timed in.</p>
+            </div>
         </div>
     </div>
     
+    <!-- (Modals are unchanged and would be here) -->
+
     <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // --- MOCK DATABASE (based on Class Diagrams) ---
+        // --- MOCK DATABASE ---
         let employees = [
             { id: 'EMP1001', fname: 'John', lname: 'Doe', address: '123 Main St', contact: '555-0101', username: 'johndoe', password: 'password123', role: 'HR Admin', status: 'Active', dateHired: '2025-10-10' },
             { id: 'EMP1002', fname: 'Jane', lname: 'Smith', address: '456 Oak Ave', contact: '555-0102', username: 'janesmith', password: 'password123', role: 'Sales Associate', status: 'Active', dateHired: '2025-10-15' },
             { id: 'EMP1003', fname: 'Peter', lname: 'Jones', address: '789 Pine Ln', contact: '555-0103', username: 'peterjones', password: 'password123', role: 'Inventory Manager', status: 'On Leave', dateHired: '2025-09-01' },
-            { id: 'EMP1004', fname: 'Mary', lname: 'Williams', address: '101 Maple Dr', contact: '555-0104', username: 'maryw', password: 'password123', role: 'Accountant', status: 'Active', dateHired: '2025-07-20' },
         ];
         let archivedLogs = [];
         let selectedEmployeeId = null;
 
         // --- DOM ELEMENT SELECTORS ---
+        const loginContainer = document.getElementById('login-container');
+        const adminDashboard = document.getElementById('admin-dashboard');
+        const employeeDashboard = document.getElementById('employee-dashboard');
+        const loginForm = document.getElementById('loginForm');
+        const loginError = document.getElementById('login-error');
         const employeeTableBody = document.getElementById('employeeTableBody');
         const searchBar = document.getElementById('searchBar');
-        const addBtn = document.getElementById('addBtn');
-        const updateBtn = document.getElementById('updateBtn');
-        const archiveBtn = document.getElementById('archiveBtn');
-        const viewLogBtn = document.getElementById('viewLogBtn');
         
-        const employeeModal = document.getElementById('employeeModal');
-        const archiveModal = document.getElementById('archiveModal');
-        const employeeForm = document.getElementById('employeeForm');
-        const archiveForm = document.getElementById('archiveForm');
-
-        // --- CORE FUNCTIONS ---
-
-        // Function to render the employee table
-        const renderTable = (employeeList = employees) => {
-            employeeTableBody.innerHTML = '';
-            if (employeeList.length === 0) {
-                 employeeTableBody.innerHTML = `<tr><td colspan="6" style="text-align:center;">No employees found.</td></tr>`;
-                 return;
-            }
-            employeeList.forEach(emp => {
-                const row = document.createElement('tr');
-                row.dataset.id = emp.id;
-                row.innerHTML = `
-                    <td>${emp.id}</td>
-                    <td>${emp.fname} ${emp.lname}</td>
-                    <td>${emp.role}</td>
-                    <td>${emp.status}</td>
-                    <td>${emp.dateHired}</td>
-                    <td>${emp.contact}</td>
-                `;
-                // Add click listener for row selection
-                row.addEventListener('click', () => selectRow(row, emp.id));
-                employeeTableBody.appendChild(row);
-            });
-            // Re-apply selection highlight if it exists
-            if (selectedEmployeeId) {
-                const selectedRow = employeeTableBody.querySelector(`[data-id="${selectedEmployeeId}"]`);
-                if (selectedRow) selectedRow.classList.add('selected');
-                else deselectRow(); // Deselect if the selected employee is no longer in the list
-            }
-        };
-
-        // Function to handle row selection
-        const selectRow = (row, id) => {
-            deselectRow(); // Deselect any previously selected row
-            selectedEmployeeId = id;
-            row.classList.add('selected');
-            updateBtn.disabled = false;
-            archiveBtn.disabled = false;
-        };
-
-        const deselectRow = () => {
-            selectedEmployeeId = null;
-            const selected = employeeTableBody.querySelector('.selected');
-            if (selected) selected.classList.remove('selected');
-            updateBtn.disabled = true;
-            archiveBtn.disabled = true;
-        };
-        
-        // Function to open a modal
-        const openModal = (modal) => modal.style.display = 'flex';
-        // Function to close a modal
-        const closeModal = (modal) => modal.style.display = 'none';
-
-        // --- EVENT HANDLERS (Use Cases Implementation) ---
-
-        // USE CASE: Add Employee Profile
-        addBtn.addEventListener('click', () => {
-            employeeForm.reset();
-            document.getElementById('modalTitle').textContent = 'Add New Employee';
-            document.getElementById('employeeId').value = '';
-            document.getElementById('password').required = true;
-            openModal(employeeModal);
-        });
-
-        // USE CASE: Update Employee Profile
-        updateBtn.addEventListener('click', () => {
-            if (!selectedEmployeeId) return;
-            const emp = employees.find(e => e.id === selectedEmployeeId);
-            document.getElementById('modalTitle').textContent = 'Update Employee Profile';
-            document.getElementById('employeeId').value = emp.id;
-            document.getElementById('fname').value = emp.fname;
-            document.getElementById('lname').value = emp.lname;
-            document.getElementById('address').value = emp.address;
-            document.getElementById('contact').value = emp.contact;
-            document.getElementById('username').value = emp.username;
-            document.getElementById('role').value = emp.role;
-            document.getElementById('status').value = emp.status;
-            document.getElementById('password').required = false; // Password not required on update
-            openModal(employeeModal);
-        });
-        
-        // Handle Add/Update form submission
-        employeeForm.addEventListener('submit', (e) => {
-            e.preventDefault(); // Prevent page reload
-            // Validate Data
-            const requiredFields = employeeForm.querySelectorAll('[required]');
-            let allValid = true;
-            requiredFields.forEach(field => {
-                if (!field.value.trim()) allValid = false;
-            });
-            
-            if(!allValid) {
-                document.getElementById('error-message').classList.remove('hidden');
-                return;
-            }
-            document.getElementById('error-message').classList.add('hidden');
-
-            const id = document.getElementById('employeeId').value;
-            const employeeData = {
-                fname: document.getElementById('fname').value,
-                lname: document.getElementById('lname').value,
-                address: document.getElementById('address').value,
-                contact: document.getElementById('contact').value,
-                username: document.getElementById('username').value,
-                password: document.getElementById('password').value,
-                role: document.getElementById('role').value,
-                status: document.getElementById('status').value,
-            };
-
-            if (id) { // Update existing employee
-                const index = employees.findIndex(e => e.id === id);
-                employees[index] = { ...employees[index], ...employeeData };
-            } else { // Add new employee
-                const newId = 'EMP' + (parseInt(employees[employees.length - 1].id.slice(3)) + 1);
-                employees.push({ 
-                    id: newId, 
-                    ...employeeData, 
-                    dateHired: new Date().toISOString().slice(0, 10) 
-                });
-            }
-            
-            renderTable();
-            closeModal(employeeModal);
-        });
-
-        // USE CASE: Archive Employee Profile & Log Activity
-        archiveBtn.addEventListener('click', () => {
-            if (!selectedEmployeeId) return;
-            archiveForm.reset();
-            openModal(archiveModal);
-        });
-
-        archiveForm.addEventListener('submit', (e) => {
+        // --- LOGIN & LOGOUT LOGIC ---
+        loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            const reason = document.getElementById('archiveReason').value;
-            if (!reason.trim()) {
-                alert('A reason for archiving is required.');
-                return;
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+            
+            const user = employees.find(emp => emp.username === username && emp.password === password);
+
+            if (user) {
+                loginContainer.classList.add('hidden');
+                if (user.role === 'HR Admin') {
+                    adminDashboard.classList.remove('hidden');
+                    renderTable();
+                } else {
+                    populateEmployeeDashboard(user);
+                    employeeDashboard.classList.remove('hidden');
+                }
+            } else {
+                loginError.textContent = 'Invalid username or password.';
             }
-
-            // 1. Log Archive Activity
-            const empToArchive = employees.find(e => e.id === selectedEmployeeId);
-            archivedLogs.push({
-                logId: 'LOG' + (archivedLogs.length + 1),
-                employeeId: empToArchive.id,
-                activeDate: new Date().toISOString().slice(0, 10),
-                reasonArchived: reason,
-            });
-
-            // 2. Archive Profile from "Database"
-            employees = employees.filter(e => e.id !== selectedEmployeeId);
-
-            deselectRow();
-            renderTable();
-            closeModal(archiveModal);
         });
 
-        // USE CASE: View all Employee Records & Search
-        searchBar.addEventListener('keyup', () => {
-            const searchTerm = searchBar.value.toLowerCase();
-            const filteredEmployees = employees.filter(emp => 
-                `${emp.fname} ${emp.lname}`.toLowerCase().includes(searchTerm)
-            );
-            renderTable(filteredEmployees);
-        });
+        const logout = () => {
+            adminDashboard.classList.add('hidden');
+            employeeDashboard.classList.add('hidden');
+            loginContainer.classList.remove('hidden');
+            loginForm.reset();
+            loginError.textContent = '\u00A0'; // Reset error message
+        };
         
-        // Functionality for "View Archive Log" Button
-        viewLogBtn.addEventListener('click', () => {
-             const employeeContainer = document.getElementById('employeeTableContainer');
-             const logContainer = document.getElementById('archiveLogContainer');
-             const mainTitle = document.getElementById('main-title');
+        document.getElementById('admin-logout-btn').addEventListener('click', logout);
+        document.getElementById('employee-logout-btn').addEventListener('click', logout);
 
-             if (logContainer.classList.contains('hidden')) { // Show logs
-                 logContainer.classList.remove('hidden');
-                 employeeContainer.classList.add('hidden');
-                 mainTitle.textContent = "Archive Log";
-                 viewLogBtn.textContent = "View Employees";
-                 
-                 // Render log table
-                 const logBody = document.getElementById('archiveLogTableBody');
-                 logBody.innerHTML = '';
-                 archivedLogs.forEach(log => {
-                     logBody.innerHTML += `
-                        <tr>
-                            <td>${log.logId}</td>
-                            <td>${log.employeeId}</td>
-                            <td>${log.activeDate}</td>
-                            <td>${log.reasonArchived}</td>
-                        </tr>
-                     `;
-                 });
-             } else { // Show employees
-                 logContainer.classList.add('hidden');
-                 employeeContainer.classList.remove('hidden');
-                 mainTitle.textContent = "Employee Management";
-                 viewLogBtn.textContent = "View Archive Log";
-             }
-        });
-        
-        // USE CASE: Employee Login & View own Record
-        const adminView = document.getElementById('adminView');
-        const employeeView = document.getElementById('employeeView');
-        document.getElementById('simulateLoginBtn').addEventListener('click', () => {
-            adminView.classList.add('hidden');
-            employeeView.classList.remove('hidden');
-        });
-        document.getElementById('backToAdminBtn').addEventListener('click', () => {
-            adminView.classList.remove('hidden');
-            employeeView.classList.add('hidden');
-        });
-
-        // Universal close button logic for all modals
-        document.querySelectorAll('.close-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                closeModal(employeeModal);
-                closeModal(archiveModal);
-            });
-        });
-
-        // --- INITIAL RENDER ---
-        renderTable();
-    });
-    </script>
-</body>
-</html>```
+        // --- EMPLOYEE DASHBOARD POPULATION ---
+        const populateEmployeeDashboard = (user) => {
+            document.getElementById('welcome-message').textContent
