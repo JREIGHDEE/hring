@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Functional HR System with Redesigned Employee View</title>
+    <title>POS System</title>
     <style>
         :root {
             --primary-bg: #3e4a3e;
@@ -12,9 +12,8 @@
             --card-bg: #FFFFFF;
             --text-dark: #333;
             --text-light: #fff;
-            --text-muted: #6c757d;
             --accent-green: #679469;
-            --accent-yellow: #E4C147;
+            --accent-blue: #5a7a9c;
             --accent-red: #D96C6C;
             --border-color: #dee2e6;
         }
@@ -23,265 +22,332 @@
         body { margin: 0; font-family: 'Inter', sans-serif; background-color: var(--primary-bg); color: var(--text-dark); height: 100vh; overflow: hidden; }
         .hidden { display: none !important; }
 
-        /* --- LOGIN PAGE STYLES (Unchanged) --- */
-        #loginPage { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; background-color: var(--content-bg); }
-        .login-container { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); text-align: center; width: 100%; max-width: 400px; }
-        .login-container h1 { color: var(--primary-bg); margin-bottom: 30px; }
-        .login-container .form-group { text-align: left; margin-bottom: 20px; }
-        .login-container label { font-weight: 500; margin-bottom: 5px; display: block; }
-        .login-container input { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; box-sizing: border-box; }
-        .login-container .login-btn { width: 100%; padding: 15px; border-radius: 8px; border: none; font-size: 1em; font-weight: bold; cursor: pointer; transition: background-color 0.2s; }
-        .login-btn.primary { background-color: var(--secondary-bg); color: white; margin-bottom: 15px; }
-        .login-btn.secondary { background-color: transparent; color: var(--secondary-bg); border: 1px solid var(--secondary-bg); }
-        #login-error { color: var(--accent-red); margin-top: 15px; min-height: 20px; }
-
-        /* --- SHARED APP STYLES (Unchanged) --- */
         .app-shell { display: flex; width: 100%; height: 100%; padding: 20px; box-sizing: border-box; }
         .sidebar { width: 250px; background-color: var(--secondary-bg); border-radius: 12px; padding: 20px; display: flex; flex-direction: column; color: var(--text-light); flex-shrink: 0; }
-        .main-content { flex-grow: 1; background-color: var(--content-bg); margin-left: 20px; border-radius: 12px; padding: 30px; overflow-y: auto; }
+        .main-content { flex-grow: 1; background-color: var(--content-bg); margin-left: 20px; border-radius: 12px; padding: 30px; overflow-y: hidden; display: flex; flex-direction: column; }
+        
         .sidebar-header { font-size: 1.5em; font-weight: bold; margin-bottom: 40px; }
         .sidebar-nav ul { list-style: none; padding: 0; margin: 0; }
         .sidebar-nav li { padding: 15px 10px; border-radius: 8px; margin-bottom: 10px; cursor: pointer; transition: background-color 0.2s; }
         .sidebar-nav li:hover { background-color: rgba(255, 255, 255, 0.1); }
         .sidebar-nav .active { background-color: var(--primary-bg); font-weight: bold; }
         .sidebar-footer { margin-top: auto; padding: 15px 10px; cursor: pointer; border-radius: 8px; }
-        .main-content h1, .main-content h2 { margin-top: 0; color: var(--primary-bg); border-bottom: 2px solid var(--border-color); padding-bottom: 10px; }
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px; }
-        .actions { display: flex; gap: 10px; flex-wrap: wrap; }
-        .search-bar { padding: 10px 15px; border-radius: 20px; border: 1px solid var(--border-color); width: 250px; }
-
-        /* --- STYLES FOR REDESIGNED EMPLOYEE VIEW --- */
-        .employee-profile-header {
-            display: flex;
-            align-items: center;
-            background: var(--card-bg);
-            padding: 25px;
-            border-radius: 12px;
-            margin-bottom: 25px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        }
-        .employee-avatar {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background-color: var(--primary-bg);
-            color: var(--text-light);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.5em;
-            font-weight: bold;
-            margin-right: 25px;
-        }
-        .employee-header-info h2 {
-            margin: 0 0 5px 0;
-            font-size: 1.8em;
-            color: var(--text-dark);
-            border: none;
-        }
-        .employee-header-info p {
-            margin: 0;
-            color: var(--text-muted);
-            font-size: 1.1em;
-        }
         
-        .employee-details-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
-        }
+        h1 { margin: 0 0 20px 0; color: var(--primary-bg); border-bottom: 2px solid var(--border-color); padding-bottom: 15px;}
 
-        .info-card {
-            background-color: var(--card-bg);
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        }
-        .info-card h3 {
-            margin-top: 0;
-            margin-bottom: 20px;
-            color: var(--primary-bg);
-            font-size: 1.2em;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 10px;
-        }
-        .info-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-            font-size: 1em;
-        }
-        .info-item svg {
-            width: 20px;
-            height: 20px;
-            margin-right: 15px;
-            fill: var(--secondary-bg);
-        }
-        .info-item-text strong {
-            display: block;
-            color: var(--text-muted);
-            font-size: 0.9em;
-            font-weight: 500;
-            margin-bottom: 2px;
-        }
+        .pos-container { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; height: calc(100% - 80px); }
         
-        .data-table { width: 100%; border-collapse: collapse; margin-top: 10px; background: var(--card-bg); border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-        .data-table th, .data-table td { padding: 15px; text-align: left; border-bottom: 1px solid var(--border-color); }
-        .data-table th { background-color: var(--primary-bg); color: var(--text-light); font-weight: 500;}
-        .data-table tr:last-child td { border-bottom: none; }
-        .data-table tr:nth-child(even) { background-color: #f8f9fa; }
+        /* Product Selection Panel */
+        .product-panel { background-color: var(--card-bg); border-radius: 12px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); display: flex; flex-direction: column; }
+        .product-panel h2 { margin-top: 0; }
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; overflow-y: auto; padding: 5px; }
+        .product-card { border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; text-align: center; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
+        .product-card:hover { transform: translateY(-5px); box-shadow: 0 6px 15px rgba(0,0,0,0.1); }
+        .product-card img { width: 80px; height: 80px; margin-bottom: 10px; object-fit: cover; background-color: #f0f0f0; border-radius: 50%;}
+        .product-name { font-weight: bold; margin-bottom: 5px; }
+        .product-price { color: var(--accent-green); font-weight: 500; }
+
+        /* Current Order Panel */
+        .order-panel { background-color: var(--card-bg); border-radius: 12px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); display: flex; flex-direction: column; }
+        .order-panel h2 { margin-top: 0; }
+        #order-items-list { flex-grow: 1; overflow-y: auto; }
+        .order-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #eee; }
+        .order-item-details .name { font-weight: 500; }
+        .order-item-details .price { font-size: 0.9em; color: #666; }
+        .order-item-qty { display: flex; align-items: center; gap: 8px; }
+        .qty-btn { background: none; border: 1px solid #ccc; width: 24px; height: 24px; border-radius: 50%; cursor: pointer; }
+        .order-item-subtotal { font-weight: bold; }
+
+        .order-total-section { padding-top: 20px; border-top: 2px solid var(--text-dark); }
+        .total-line { display: flex; justify-content: space-between; font-size: 1.5em; font-weight: bold; margin-bottom: 20px; }
+        
+        .action-btn { width: 100%; padding: 15px; border-radius: 8px; border: none; font-size: 1.1em; font-weight: bold; cursor: pointer; transition: background-color 0.2s; color: white; }
+        .payment-btn { background-color: var(--accent-green); }
+        .clear-btn { background-color: var(--accent-red); margin-top: 10px; }
+        .action-btn:disabled { background-color: #aaa; cursor: not-allowed; }
+        
+        /* Modal Styles */
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); justify-content: center; align-items: center; }
+        .modal-content { background-color: #fefefe; margin: auto; padding: 30px; border: none; width: 90%; max-width: 450px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); text-align: center; }
+        .modal h2 { margin-top: 0; }
+        .modal .form-group { text-align: left; margin: 20px 0; }
+        .modal label { font-weight: 500; margin-bottom: 8px; display: block; }
+        .modal input { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; box-sizing: border-box; font-size: 1.2em; text-align: right; }
+        #change-due { font-size: 1.8em; font-weight: bold; color: var(--accent-blue); margin: 20px 0; min-height: 30px; }
+        .modal-actions { display: flex; gap: 15px; margin-top: 20px; }
+
+        /* Transaction Summary Modal */
+        #summary-details { text-align: left; margin: 20px 0; border-top: 1px solid #eee; padding-top: 15px; }
+        #summary-details p { display: flex; justify-content: space-between; margin: 8px 0; }
+        #summary-details .total { font-weight: bold; font-size: 1.1em; border-top: 1px solid #ccc; padding-top: 8px; }
 
     </style>
 </head>
 <body>
 
-    <!-- =========== LOGIN PAGE (STARTS HERE) =========== -->
-    <div id="loginPage">
-        <div class="login-container">
-            <h1>HR System Login</h1>
-            <form id="loginForm">
-                <div class="form-group"><label for="username">Username</label><input type="text" id="username" value="janesmith"></div>
-                <div class="form-group"><label for="password">Password</label><input type="password" id="password" value="password123"></div>
-                 <p id="login-error">&nbsp;</p>
-                <button type="submit" class="login-btn primary">Login as Employee</button>
-                <button type="button" id="adminLoginBtn" class="login-btn secondary">Login as HR Admin</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- =========== HR ADMIN PAGE (Initially Hidden) =========== -->
-    <div id="hrAdminPage" class="app-shell hidden">
-        <!-- (Unchanged) -->
-    </div>
-    
-    <!-- =========== EMPLOYEE DASHBOARD PAGE (REDESIGNED & Initially Hidden) =========== -->
-    <div id="employeePage" class="app-shell hidden">
+    <div class="app-shell">
         <aside class="sidebar">
             <div class="sidebar-header">WeekendMatcha</div>
             <nav class="sidebar-nav">
                 <ul>
-                    <li class="tab-link active" data-tab="profile">My Profile</li>
-                    <li class="tab-link" data-tab="attendance">Attendance Log</li>
+                    <li>Inventory</li>
+                    <li class="active">Sales (POS)</li>
+                    <li>Human Resource</li>
                 </ul>
             </nav>
-            <div class="sidebar-footer logout-btn">&#8592; Log Out</div>
+            <div class="sidebar-footer">&#8592; Log Out</div>
         </aside>
-        <main class="main-content">
-            <!-- Profile Tab Content -->
-            <div id="profile-tab" class="tab-content">
-                <div id="employee-profile-header" class="employee-profile-header">
-                    <!-- Dynamic Header Content -->
-                </div>
 
-                <div class="employee-details-grid">
-                    <div class="info-card" id="employee-job-details">
-                        <!-- Dynamic Job Details -->
-                    </div>
-                    <div class="info-card" id="employee-contact-details">
-                        <!-- Dynamic Contact Details -->
+        <main class="main-content">
+            <h1>Point of Sale System</h1>
+            <div class="pos-container">
+                <!-- Left Panel: Product Selection -->
+                <div class="product-panel">
+                    <h2>Select Products</h2>
+                    <div class="product-grid" id="product-grid">
+                        <!-- Products will be dynamically inserted here -->
                     </div>
                 </div>
-            </div>
-            <!-- Attendance Tab Content -->
-            <div id="attendance-tab" class="tab-content hidden">
-                <h2>My Attendance Log</h2>
-                <table class="data-table">
-                    <thead><tr><th>Date</th><th>Time In</th><th>Time Out</th><th>Hours Worked</th></tr></thead>
-                    <tbody id="employee-attendance-log"></tbody>
-                </table>
+                <!-- Right Panel: Current Order -->
+                <div class="order-panel">
+                    <h2>Current Order</h2>
+                    <div id="order-items-list">
+                        <!-- Order items will be dynamically inserted here -->
+                    </div>
+                    <div class="order-total-section">
+                        <div class="total-line">
+                            <span>TOTAL</span>
+                            <span id="order-total">₱0.00</span>
+                        </div>
+                        <button id="payment-btn" class="action-btn payment-btn" disabled>Process Payment</button>
+                        <button id="clear-btn" class="action-btn clear-btn" disabled>Clear Order</button>
+                    </div>
+                </div>
             </div>
         </main>
     </div>
 
+    <!-- Payment Modal -->
+    <div id="payment-modal" class="modal">
+        <div class="modal-content">
+            <h2>Process Payment</h2>
+            <div class="form-group">
+                <label>Total Amount Due</label>
+                <input type="text" id="total-due-display" readonly style="background:#eee;">
+            </div>
+            <div class="form-group">
+                <label for="cash-received">Cash Received</label>
+                <input type="number" id="cash-received" placeholder="0.00">
+            </div>
+            <h3>Change Due:</h3>
+            <div id="change-due">₱0.00</div>
+            <div class="modal-actions">
+                <button id="cancel-payment-btn" class="action-btn clear-btn" style="flex:1;">Cancel</button>
+                <button id="confirm-payment-btn" class="action-btn payment-btn" style="flex:1;" disabled>Confirm</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Transaction Summary Modal -->
+    <div id="summary-modal" class="modal">
+        <div class="modal-content">
+            <h2 style="color:var(--accent-green);">Transaction Complete!</h2>
+            <p>Transaction ID: <span id="summary-tid"></span></p>
+            <div id="summary-details">
+                <!-- Summary details will be populated here -->
+            </div>
+            <button id="new-order-btn" class="action-btn payment-btn" style="width:100%;">Start New Order</button>
+        </div>
+    </div>
+
     <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // --- MOCK DATABASE AND LOGIN LOGIC (Unchanged) ---
-        let employees = [
-            { id: 'EMP1001', fname: 'John', lname: 'Doe', address: '123 Main St, Anytown', contact: '555-0101', username: 'johndoe', password: 'password123', role: 'HR Admin', status: 'Active', dateHired: '2025-10-10', shift: '9:00 AM - 5:00 PM' },
-            { id: 'EMP1002', fname: 'Jane', lname: 'Smith', address: '456 Oak Ave, Sometown', contact: '555-0102', username: 'janesmith', password: 'password123', role: 'Sales Associate', status: 'Active', dateHired: '2025-10-15', shift: '10:00 AM - 6:00 PM' },
-            { id: 'EMP1003', fname: 'Peter', lname: 'Jones', address: '789 Pine Ln, Otherville', contact: '555-0103', username: 'peterjones', password: 'password123', role: 'Inventory Manager', status: 'On Leave', dateHired: '2025-09-01', shift: '8:00 AM - 4:00 PM' },
+        // --- MOCK DATABASE (based on Class Diagrams) ---
+        const products = [
+            { id: 1, name: 'Matcha Latte', price: 150.00, img: 'https://via.placeholder.com/80/A2D0C0/3e4a3e?text=ML' },
+            { id: 2, name: 'Hojicha Latte', price: 150.00, img: 'https://via.placeholder.com/80/D0B8A2/3e4a3e?text=HL' },
+            { id: 3, name: 'Strawberry Matcha', price: 160.00, img: 'https://via.placeholder.com/80/F2A0A0/3e4a3e?text=SM' },
+            { id: 4, name: 'Taro Latte', price: 140.00, img: 'https://via.placeholder.com/80/D1C4E9/3e4a3e?text=TL' },
+            { id: 5, name: 'Classic Milk Tea', price: 120.00, img: 'https://via.placeholder.com/80/EAC696/3e4a3e?text=MT' },
+            { id: 6, name: 'Croissant', price: 85.00, img: 'https://via.placeholder.com/80/FFDAB9/3e4a3e?text=C' },
         ];
-        const attendanceData = { 'EMP1002': [ { date: '2025-10-27', timeIn: '10:05 AM', timeOut: '6:02 PM', hours: '7.95' }, { date: '2025-10-28', timeIn: '09:58 AM', timeOut: '6:05 PM', hours: '8.07' }, { date: '2025-10-29', timeIn: '10:01 AM', timeOut: '5:55 PM', hours: '7.90' }]};
-        
-        const loginPage = document.getElementById('loginPage');
-        const hrAdminPage = document.getElementById('hrAdminPage');
-        const employeePage = document.getElementById('employeePage');
-        const loginForm = document.getElementById('loginForm');
-        const adminLoginBtn = document.getElementById('adminLoginBtn');
+        let currentOrder = []; // Simulates TransactionItem table
+        let recentTransactions = []; // Simulates Transaction table
 
-        loginForm.addEventListener('submit', e => { e.preventDefault(); const user = employees.find(emp => emp.username === 'janesmith'); if (user) showEmployeeDashboard(user); });
-        adminLoginBtn.addEventListener('click', () => showHrAdminDashboard());
-        document.querySelectorAll('.logout-btn').forEach(btn => btn.addEventListener('click', () => { loginPage.classList.remove('hidden'); hrAdminPage.classList.add('hidden'); employeePage.classList.add('hidden'); }));
+        // --- DOM ELEMENT SELECTORS ---
+        const productGrid = document.getElementById('product-grid');
+        const orderItemsList = document.getElementById('order-items-list');
+        const orderTotalDisplay = document.getElementById('order-total');
+        const paymentBtn = document.getElementById('payment-btn');
+        const clearBtn = document.getElementById('clear-btn');
+        const paymentModal = document.getElementById('payment-modal');
+        const summaryModal = document.getElementById('summary-modal');
 
-        const showHrAdminDashboard = () => { loginPage.classList.add('hidden'); employeePage.classList.add('hidden'); hrAdminPage.classList.remove('hidden'); };
-        const showEmployeeDashboard = (user) => { loginPage.classList.add('hidden'); hrAdminPage.classList.add('hidden'); employeePage.classList.remove('hidden'); renderEmployeeDashboard(user); };
-        
-        // --- EMPLOYEE DASHBOARD RENDERING LOGIC (UPDATED) ---
-        const renderEmployeeDashboard = (user) => {
-            const initials = `${user.fname[0]}${user.lname[0]}`;
-            
-            // Render the main header
-            document.getElementById('employee-profile-header').innerHTML = `
-                <div class="employee-avatar">${initials}</div>
-                <div class="employee-header-info">
-                    <h2>${user.fname} ${user.lname}</h2>
-                    <p>${user.role}</p>
-                </div>
-            `;
-            
-            // Render the Job Details Card
-            document.getElementById('employee-job-details').innerHTML = `
-                <h3>Job Details</h3>
-                <div class="info-item">
-                    <svg viewBox="0 0 24 24"><path d="M19,4H18V2H16V4H8V2H6V4H5A2,2 0 0,0 3,6V20A2,2 0 0,0 5,22H19A2,2 0 0,0 21,20V6A2,2 0 0,0 19,4M19,20H5V10H19V20M19,8H5V6H19V8M12,13H17V18H12V13Z" /></svg>
-                    <div class="info-item-text"><strong>Date Hired</strong>${user.dateHired}</div>
-                </div>
-                <div class="info-item">
-                     <svg viewBox="0 0 24 24"><path d="M10,2H14A2,2 0 0,1 16,4V6H20A2,2 0 0,1 22,8V19A2,2 0 0,1 20,21H4A2,2 0 0,1 2,19V8A2,2 0 0,1 4,6H8V4A2,2 0 0,1 10,2M14,6V4H10V6H14M4,8V19H20V8H4Z" /></svg>
-                    <div class="info-item-text"><strong>Employee ID</strong>${user.id}</div>
-                </div>
-                <div class="info-item">
-                    <svg viewBox="0 0 24 24"><path d="M12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12.5,7V12.25L17,14.92L16.25,16.15L11,13V7H12.5Z" /></svg>
-                    <div class="info-item-text"><strong>Shift Schedule</strong>${user.shift}</div>
-                </div>
-            `;
+        // --- CORE FUNCTIONS (Implementing Use Cases & Class Logic) ---
 
-            // Render the Contact Information Card
-            document.getElementById('employee-contact-details').innerHTML = `
-                <h3>Contact Information</h3>
-                <div class="info-item">
-                    <svg viewBox="0 0 24 24"><path d="M6.62,10.79C8.06,13.62 10.38,15.94 13.21,17.38L15.41,15.18C15.69,14.9 16.08,14.82 16.43,14.93C17.55,15.3 18.75,15.5 20,15.5A1,1 0 0,1 21,16.5V20A1,1 0 0,1 20,21A17,17 0 0,1 3,4A1,1 0 0,1 4,3H7.5A1,1 0 0,1 8.5,4C8.5,5.25 8.7,6.45 9.07,7.57C9.18,7.92 9.1,8.31 8.82,8.59L6.62,10.79Z" /></svg>
-                    <div class="info-item-text"><strong>Contact Number</strong>${user.contact}</div>
-                </div>
-                 <div class="info-item">
-                    <svg viewBox="0 0 24 24"><path d="M4,4H20A2,2 0 0,1 22,6V18A2,2 0 0,1 20,20H4A2,2 0 0,1 2,18V6A2,2 0 0,1 4,4M12,11L20,6H4L12,11M4,18H20V8L12,13L4,8V18Z" /></svg>
-                    <div class="info-item-text"><strong>Username / Email</strong>${user.username}</div>
-                </div>
-                <div class="info-item">
-                    <svg viewBox="0 0 24 24"><path d="M12,11.5A2.5,2.5 0 0,1 9.5,9A2.5,2.5 0 0,1 12,6.5A2.5,2.5 0 0,1 14.5,9A2.5,2.5 0 0,1 12,11.5M12,2A7,7 0 0,0 5,9C5,14.25 12,22 12,22C12,22 19,14.25 19,9A7,7 0 0,0 12,2Z" /></svg>
-                    <div class="info-item-text"><strong>Address</strong>${user.address}</div>
-                </div>
-            `;
+        // Function to render all products
+        const renderProducts = () => {
+            productGrid.innerHTML = '';
+            products.forEach(product => {
+                productGrid.innerHTML += `
+                    <div class="product-card" data-id="${product.id}">
+                        <img src="${product.img}" alt="${product.name}">
+                        <div class="product-name">${product.name}</div>
+                        <div class="product-price">₱${product.price.toFixed(2)}</div>
+                    </div>
+                `;
+            });
+        };
 
-            // Render attendance log (unchanged)
-            const attendanceLog = document.getElementById('employee-attendance-log');
-            attendanceLog.innerHTML = '';
-            const userAttendance = attendanceData[user.id] || [];
-            if (userAttendance.length > 0) userAttendance.forEach(log => { attendanceLog.innerHTML += `<tr><td>${log.date}</td><td>${log.timeIn}</td><td>${log.timeOut}</td><td>${log.hours}</td></tr>`; });
-            else attendanceLog.innerHTML = `<tr><td colspan="4" style="text-align:center;">No attendance records found.</td></tr>`;
+        // USE CASE: Add Items to Order
+        const addItemToOrder = (productId) => {
+            const product = products.find(p => p.id === productId);
+            const existingItem = currentOrder.find(item => item.productId === productId);
+
+            if (existingItem) {
+                existingItem.quantity++;
+            } else {
+                currentOrder.push({
+                    productId: product.id,
+                    name: product.name,
+                    priceAtSale: product.price,
+                    quantity: 1
+                });
+            }
+            renderOrder();
         };
         
-        // Tab switching logic (unchanged)
-        document.querySelectorAll('.tab-link').forEach(tabLink => {
-            tabLink.addEventListener('click', () => {
-                document.querySelectorAll('.tab-link').forEach(tl => tl.classList.remove('active'));
-                tabLink.classList.add('active');
-                const tabToShow = tabLink.dataset.tab;
-                document.querySelectorAll('.tab-content').forEach(content => {
-                    content.id === `${tabToShow}-tab` ? content.classList.remove('hidden') : content.classList.add('hidden');
-                });
+        const adjustQuantity = (productId, amount) => {
+            const item = currentOrder.find(i => i.productId === productId);
+            if (item) {
+                item.quantity += amount;
+                if (item.quantity <= 0) {
+                    currentOrder = currentOrder.filter(i => i.productId !== productId);
+                }
+            }
+            renderOrder();
+        };
+
+        // Renders the current order and calculates total
+        const renderOrder = () => {
+            orderItemsList.innerHTML = '';
+            if (currentOrder.length === 0) {
+                orderItemsList.innerHTML = `<p style="text-align:center; color:#888;">No items in order.</p>`;
+            }
+            
+            currentOrder.forEach(item => {
+                const subtotal = item.priceAtSale * item.quantity; // getSubtotal() logic
+                orderItemsList.innerHTML += `
+                    <div class="order-item">
+                        <div class="order-item-details">
+                            <div class="name">${item.name}</div>
+                            <div class="price">${item.quantity} x ₱${item.priceAtSale.toFixed(2)}</div>
+                        </div>
+                        <div class="order-item-qty">
+                             <button class="qty-btn" onclick="window.adjustQuantity(${item.productId}, -1)">-</button>
+                             <span>${item.quantity}</span>
+                             <button class="qty-btn" onclick="window.adjustQuantity(${item.productId}, 1)">+</button>
+                        </div>
+                        <div class="order-item-subtotal">₱${subtotal.toFixed(2)}</div>
+                    </div>
+                `;
             });
+            updateTotal();
+        };
+
+        // USE CASE: Calculate Total
+        const updateTotal = () => {
+            const total = currentOrder.reduce((sum, item) => sum + (item.priceAtSale * item.quantity), 0); // calculateTotal() logic
+            orderTotalDisplay.textContent = `₱${total.toFixed(2)}`;
+            paymentBtn.disabled = currentOrder.length === 0;
+            clearBtn.disabled = currentOrder.length === 0;
+        };
+
+        // USE CASE: Clear Current Order
+        const clearOrder = () => {
+            currentOrder = [];
+            renderOrder();
+        };
+
+        // USE CASE: Process Payment via Cash
+        const openPaymentModal = () => {
+            const total = currentOrder.reduce((sum, item) => sum + (item.priceAtSale * item.quantity), 0);
+            document.getElementById('total-due-display').value = `₱${total.toFixed(2)}`;
+            document.getElementById('cash-received').value = '';
+            document.getElementById('change-due').textContent = '₱0.00';
+            document.getElementById('confirm-payment-btn').disabled = true;
+            paymentModal.style.display = 'flex';
+        };
+
+        // --- EVENT BINDINGS ---
+        productGrid.addEventListener('click', e => {
+            const card = e.target.closest('.product-card');
+            if (card) addItemToOrder(parseInt(card.dataset.id));
         });
+
+        paymentBtn.addEventListener('click', openPaymentModal);
+        clearBtn.addEventListener('click', clearOrder);
+        document.getElementById('cancel-payment-btn').addEventListener('click', () => paymentModal.style.display = 'none');
+        document.getElementById('new-order-btn').addEventListener('click', () => summaryModal.style.display = 'none');
+        
+        // Payment modal logic
+        const cashReceivedInput = document.getElementById('cash-received');
+        const confirmPaymentBtn = document.getElementById('confirm-payment-btn');
+        cashReceivedInput.addEventListener('input', () => {
+            const totalDue = currentOrder.reduce((sum, item) => sum + (item.priceAtSale * item.quantity), 0);
+            const cash = parseFloat(cashReceivedInput.value) || 0;
+            const change = cash - totalDue;
+            
+            if (change >= 0) {
+                document.getElementById('change-due').textContent = `₱${change.toFixed(2)}`;
+                confirmPaymentBtn.disabled = false;
+            } else {
+                document.getElementById('change-due').textContent = 'Insufficient amount';
+                confirmPaymentBtn.disabled = true;
+            }
+        });
+        
+        // USE CASE: Record Sale Transaction & Display Summary
+        confirmPaymentBtn.addEventListener('click', () => {
+            const totalAmount = currentOrder.reduce((sum, item) => sum + (item.priceAtSale * item.quantity), 0);
+            const amountReceived = parseFloat(cashReceivedInput.value);
+            
+            const transaction = {
+                transactionId: Date.now(), // Simple unique ID
+                employeeId: 101, // Mock employee ID
+                transactionDateTime: new Date(),
+                totalAmount: totalAmount,
+                amountReceived: amountReceived,
+                changeGiven: amountReceived - totalAmount,
+                items: [...currentOrder] // Save a copy of the items
+            };
+            
+            recentTransactions.push(transaction); // CREATE operation
+            
+            // Display Summary
+            document.getElementById('summary-tid').textContent = transaction.transactionId;
+            const summaryDetails = document.getElementById('summary-details');
+            summaryDetails.innerHTML = ''; // Clear previous summary
+            transaction.items.forEach(item => {
+                summaryDetails.innerHTML += `<p><span>${item.name} (x${item.quantity})</span> <span>₱${(item.priceAtSale * item.quantity).toFixed(2)}</span></p>`;
+            });
+            summaryDetails.innerHTML += `
+                <p class="total"><span>Total</span> <span>₱${transaction.totalAmount.toFixed(2)}</span></p>
+                <p><span>Cash Paid</span> <span>₱${transaction.amountReceived.toFixed(2)}</span></p>
+                <p><span>Change</span> <span>₱${transaction.changeGiven.toFixed(2)}</span></p>
+            `;
+            
+            paymentModal.style.display = 'none';
+            summaryModal.style.display = 'flex';
+            clearOrder();
+        });
+
+        // --- INITIALIZATION ---
+        renderProducts();
+        renderOrder();
+        
+        // Expose functions to global scope for inline onclick handlers
+        window.adjustQuantity = adjustQuantity;
     });
     </script>
 </body>
