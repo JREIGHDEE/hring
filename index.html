@@ -3,182 +3,228 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Menu Management</title>
+    <title>New POS System</title>
     <style>
         :root {
-            --primary-bg: #3e4a3e;
-            --secondary-bg: #677967;
-            --content-bg: #EAE5D9;
+            --sidebar-bg: #5D7468;
+            --main-bg: #F0EBE3;
             --card-bg: #FFFFFF;
             --text-dark: #333;
             --text-light: #fff;
-            --accent-green: #679469;
-            --accent-blue: #5a7a9c;
-            --border-color: #dee2e6;
+            --accent-green: #5D7468;
+            --accent-red: #E67E7E;
+            --border-color: #E0D8CC;
         }
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
         
-        body { margin: 0; font-family: 'Inter', sans-serif; background-color: var(--primary-bg); color: var(--text-dark); height: 100vh; overflow: hidden; }
+        body { margin: 0; font-family: 'Poppins', sans-serif; background-color: #333; color: var(--text-dark); height: 100vh; display: flex; align-items: center; justify-content: center; }
+        .app-shell { display: flex; width: 1000px; height: 700px; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        .sidebar { width: 220px; background-color: var(--sidebar-bg); padding: 30px 20px; display: flex; flex-direction: column; color: var(--text-light); }
+        .main-content { flex-grow: 1; background-color: var(--main-bg); padding: 30px; display: flex; flex-direction: column; }
+        
+        .sidebar-user { text-align: center; margin-bottom: 40px; }
+        .sidebar-user .avatar { width: 80px; height: 80px; border-radius: 50%; background-color: #fff; color: var(--sidebar-bg); margin: 0 auto 15px auto; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 2.5em; }
+        .sidebar-user .name { font-weight: 600; font-size: 1.1em; }
+        .sidebar-user .id { font-size: 0.9em; opacity: 0.8; }
 
-        .app-shell { display: flex; width: 100%; height: 100%; padding: 20px; box-sizing: border-box; }
-        .sidebar { width: 250px; background-color: var(--secondary-bg); border-radius: 12px; padding: 20px; display: flex; flex-direction: column; color: var(--text-light); flex-shrink: 0; }
-        .main-content { flex-grow: 1; background-color: var(--content-bg); margin-left: 20px; border-radius: 12px; padding: 30px; overflow-y: auto; }
-        
-        .sidebar-header { font-size: 1.5em; font-weight: bold; margin-bottom: 40px; }
         .sidebar-nav ul { list-style: none; padding: 0; margin: 0; }
-        .sidebar-nav li { padding: 15px 10px; border-radius: 8px; margin-bottom: 10px; cursor: pointer; }
-        .sidebar-nav .active { background-color: var(--primary-bg); font-weight: bold; }
-        .sidebar-footer { margin-top: auto; padding: 15px 10px; cursor: pointer; border-radius: 8px; }
-        
-        .header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 15px; border-bottom: 2px solid var(--border-color); margin-bottom: 20px; }
-        h1 { margin: 0; color: var(--primary-bg); }
-        .action-btn { padding: 10px 25px; border-radius: 20px; border: none; color: white; font-weight: bold; cursor: pointer; background-color: var(--accent-green); }
+        .sidebar-nav li { padding: 15px; border-radius: 10px; margin-bottom: 10px; cursor: pointer; font-weight: 500; transition: background-color 0.2s; }
+        .sidebar-nav .active { background-color: rgba(255,255,255,0.2); }
+        .sidebar-footer { margin-top: auto; padding: 15px; cursor: pointer; font-weight: 500; display: flex; align-items: center; gap: 10px; }
 
-        .data-table { width: 100%; border-collapse: collapse; background: var(--card-bg); border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-        .data-table th, .data-table td { padding: 15px; text-align: left; border-bottom: 1px solid var(--border-color); }
-        .data-table th { background-color: var(--primary-bg); color: var(--text-light); }
-        .data-table tr:last-child td { border-bottom: none; }
+        h1 { margin: 0; font-size: 1.8em; font-weight: 600; }
         
-        /* Modal Styles */
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); justify-content: center; align-items: center; }
-        .modal-content { background-color: #fefefe; margin: auto; padding: 30px; border: none; width: 90%; max-width: 500px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .modal-header h2 { margin: 0; }
-        .close-btn { font-size: 28px; font-weight: bold; cursor: pointer; color: #aaa; }
-        .form-group { margin-bottom: 15px; }
+        .pos-container { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; height: 100%; margin-top: 20px; }
+        
+        .product-panel { background-color: var(--card-bg); border-radius: 12px; padding: 20px; display: flex; flex-direction: column; }
+        .product-header { display: flex; align-items: center; margin-bottom: 15px; gap: 10px; }
+        .search-bar { flex-grow: 1; padding: 10px 15px; border-radius: 8px; border: 1px solid var(--border-color); font-family: 'Poppins'; }
+        .manage-btn { padding: 8px; border: none; background: none; cursor: pointer; }
+        .manage-btn svg { width: 24px; height: 24px; fill: #555; }
+        
+        .product-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; overflow-y: auto; padding: 5px; }
+        .product-card { border: 1px solid var(--border-color); border-radius: 8px; text-align: center; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; background: #fff; padding: 10px;}
+        .product-card:hover { transform: translateY(-5px); box-shadow: 0 6px 15px rgba(0,0,0,0.1); }
+        .product-card img { width: 100%; height: 100px; object-fit: contain; }
+        .product-name { font-weight: 600; }
+        .product-price { color: var(--text-dark); opacity: 0.8; font-weight: 500; }
+
+        .order-panel { background-color: var(--card-bg); border-radius: 12px; padding: 20px; display: flex; flex-direction: column; }
+        .order-panel h2 { margin: 0 0 15px 0; font-size: 1.2em; }
+        #order-items-list { flex-grow: 1; overflow-y: auto; }
+        .order-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; font-size: 0.9em;}
+        .order-item-details .name { font-weight: 600; }
+        .order-item-details .price { opacity: 0.7; }
+        .order-item-qty { display: flex; align-items: center; gap: 12px; font-weight: 500; }
+        .qty-btn { background: #eee; border: none; width: 24px; height: 24px; border-radius: 50%; cursor: pointer; font-weight: bold; }
+        .order-item-subtotal { font-weight: 600; font-size: 1em; }
+
+        .order-total-section { padding-top: 20px; border-top: 2px solid var(--border-color); }
+        .total-line { display: flex; justify-content: space-between; font-size: 1.5em; font-weight: bold; margin-bottom: 20px; }
+        
+        .action-btn { width: 100%; padding: 15px; border-radius: 8px; border: none; font-size: 1em; font-weight: bold; cursor: pointer; color: white; margin-top: 10px; }
+        .payment-btn { background-color: var(--accent-green); }
+        .clear-btn { background-color: var(--accent-red); }
+        
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); justify-content: center; align-items: center; backdrop-filter: blur(5px); }
+        .modal-content { background-color: var(--card-bg); padding: 30px; width: 90%; max-width: 400px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); text-align: center; }
+        .modal h2 { margin-top: 0; }
+        .form-group { text-align: left; margin-bottom: 15px; }
         .form-group label { display: block; font-weight: 500; margin-bottom: 5px; }
-        .form-group input, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
-        .modal-footer { text-align: right; margin-top: 25px; }
+        .form-group input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        #admin-error { color: var(--accent-red); min-height: 20px; }
     </style>
 </head>
 <body>
 
     <div class="app-shell">
         <aside class="sidebar">
-            <div class="sidebar-header">WeekendMatcha</div>
-            <nav class="sidebar-nav">
-                <ul>
-                    <li class="active">Menu Management</li>
-                    <li>Inventory</li>
-                    <li>Sales Reports</li>
-                    <li>Human Resource</li>
-                </ul>
-            </nav>
-            <div class="sidebar-footer">&#8592; Log Out</div>
+            <div class="sidebar-user">
+                <div class="avatar">J</div>
+                <div class="name">Jane Doe</div>
+                <div class="id">ID: EMP1005</div>
+            </div>
+            <nav class="sidebar-nav"><ul><li class="active">POS</li><li>Current Orders</li></ul></nav>
+            <div class="sidebar-footer"><span>&#8592;</span> Log Out</div>
         </aside>
 
         <main class="main-content">
-            <div class="header">
-                <h1>Menu Items</h1>
-                <button id="add-item-btn" class="action-btn">Add New Item</button>
+            <h1>Point of Sale System</h1>
+            <div class="pos-container">
+                <div class="product-panel">
+                    <div class="product-header">
+                        <h2>Products</h2>
+                        <input type="text" class="search-bar" placeholder="Search">
+                        <!-- TIE-IN 1: The "Manage Menu" button next to the search bar -->
+                        <button id="manage-menu-btn" class="manage-btn" title="Manage Menu Items">
+                             <svg viewBox="0 0 24 24"><path d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z" /></svg>
+                        </button>
+                    </div>
+                    <div class="product-grid" id="product-grid"></div>
+                </div>
+                <div class="order-panel">
+                    <h2>Current Order</h2>
+                    <div id="order-items-list"></div>
+                    <div class="order-total-section">
+                        <div class="total-line"><span>TOTAL</span><span id="order-total">₱0.00</span></div>
+                        <button class="action-btn payment-btn">Process Payment</button>
+                        <button class="action-btn clear-btn">Cancel Order</button>
+                    </div>
+                </div>
             </div>
-            
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th>Product ID</th>
-                        <th>Product Name</th>
-                        <th>Price</th>
-                        <th>Recipe / Ingredients</th>
-                    </tr>
-                </thead>
-                <tbody id="menu-items-body">
-                    <!-- Menu items will be dynamically inserted here -->
-                </tbody>
-            </table>
         </main>
     </div>
+    
+    <!-- TIE-IN 2: Admin Login Modal -->
+    <div id="admin-login-modal" class="modal">
+        <div class="modal-content">
+            <h2>Admin Authentication Required</h2>
+            <p>Please enter the admin password to manage menu items.</p>
+            <form id="admin-login-form">
+                <div class="form-group">
+                    <label for="admin-password">Password</label>
+                    <input type="password" id="admin-password" required>
+                </div>
+                <p id="admin-error">&nbsp;</p>
+                <button type="submit" class="action-btn payment-btn" style="width:100%;">Login</button>
+            </form>
+        </div>
+    </div>
 
-    <!-- Add New Item Modal -->
+    <!-- TIE-IN 3: Add/Edit Item Modal -->
     <div id="add-item-modal" class="modal">
         <div class="modal-content">
-            <div class="modal-header">
-                <h2>Add New Menu Item</h2>
-                <span class="close-btn">&times;</span>
-            </div>
+            <h2>Add New Menu Item</h2>
             <form id="add-item-form">
-                <div class="form-group">
-                    <label for="product-name">Product Name</label>
-                    <input type="text" id="product-name" required>
-                </div>
-                <div class="form-group">
-                    <label for="product-price">Product Price (₱)</label>
-                    <input type="number" id="product-price" step="0.01" required>
-                </div>
-                <div class="form-group">
-                    <label for="product-recipe">Recipe / Ingredients</label>
-                    <textarea id="product-recipe" rows="4" placeholder="e.g., Matcha Powder: 15g, Milk: 200ml, Sugar Syrup: 20ml"></textarea>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="action-btn">Save Item</button>
-                </div>
+                <div class="form-group"><label for="product-name">Product Name</label><input type="text" id="product-name" required></div>
+                <div class="form-group"><label for="product-price">Price (₱)</label><input type="number" id="product-price" step="1" required></div>
+                <div class="form-group"><label for="product-image">Image URL</label><input type="text" id="product-image" placeholder="Paste image link here..."></div>
+                <button type="submit" class="action-btn payment-btn" style="width:100%; margin-top:20px;">Save New Item</button>
             </form>
         </div>
     </div>
 
     <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // --- MOCK DATABASE ---
-        let menuProducts = [
-            { id: 1, name: 'Matcha Latte', price: 150.00, recipe: 'Matcha: 15g, Milk: 200ml' },
-            { id: 2, name: 'Hojicha Latte', price: 150.00, recipe: 'Hojicha: 15g, Milk: 200ml' },
-            { id: 3, name: 'Strawberry Matcha', price: 160.00, recipe: 'Matcha: 15g, Milk: 150ml, Strawberry Puree: 50ml' },
+        // --- MOCK DATABASE & CONFIG ---
+        const ADMIN_PASSWORD = "1234"; // Simple password for demo
+        let products = [
+            { id: 1, name: 'Pistachio Matcha', price: 250.00, img: 'https://i.imgur.com/8aTEf2c.png' },
+            { id: 2, name: 'Matcha Latte', price: 210.00, img: 'https://i.imgur.com/3Z3Z2sK.png' },
+            { id: 3, name: 'Hojicha', price: 190.00, img: 'https://i.imgur.com/2s3eZ5t.png' },
+            { id: 4, name: 'Strawberry Matcha', price: 250.00, img: 'https://i.imgur.com/X4yXG9A.png' },
+            { id: 5, name: 'Peach Mango Matcha', price: 250.00, img: 'https://i.imgur.com/k2e2h5B.png' },
+            { id: 6, name: 'Blueberry Matcha', price: 250.00, img: 'https://i.imgur.com/fL3Z1gN.png' }
         ];
 
         // --- DOM ELEMENTS ---
-        const menuItemsBody = document.getElementById('menu-items-body');
-        const addItemBtn = document.getElementById('add-item-btn');
+        const productGrid = document.getElementById('product-grid');
+        const manageMenuBtn = document.getElementById('manage-menu-btn');
+        const adminLoginModal = document.getElementById('admin-login-modal');
         const addItemModal = document.getElementById('add-item-modal');
-        const closeBtn = document.querySelector('.close-btn');
+        const adminLoginForm = document.getElementById('admin-login-form');
         const addItemForm = document.getElementById('add-item-form');
-
+        
         // --- FUNCTIONS ---
-        const renderMenuItems = () => {
-            menuItemsBody.innerHTML = '';
-            menuProducts.forEach(product => {
-                menuItemsBody.innerHTML += `
-                    <tr>
-                        <td>PROD-${product.id.toString().padStart(4, '0')}</td>
-                        <td>${product.name}</td>
-                        <td>₱${product.price.toFixed(2)}</td>
-                        <td>${product.recipe}</td>
-                    </tr>
+        const renderProducts = () => {
+            productGrid.innerHTML = '';
+            products.forEach(p => {
+                productGrid.innerHTML += `
+                    <div class="product-card" data-id="${p.id}">
+                        <img src="${p.img}" alt="${p.name}">
+                        <div class="product-name">${p.name}</div>
+                        <div class="product-price">₱${p.price.toFixed(2)}</div>
+                    </div>
                 `;
             });
         };
-        
-        const openModal = () => { addItemModal.style.display = 'flex'; };
-        const closeModal = () => { addItemModal.style.display = 'none'; };
+
+        const openModal = (modal) => { modal.style.display = 'flex'; };
+        const closeModal = (modal) => { modal.style.display = 'none'; };
 
         // --- EVENT HANDLERS ---
-        addItemBtn.addEventListener('click', openModal);
-        closeBtn.addEventListener('click', closeModal);
-        window.addEventListener('click', (e) => {
-            if (e.target == addItemModal) closeModal();
+        manageMenuBtn.addEventListener('click', () => {
+            document.getElementById('admin-error').innerHTML = '&nbsp;';
+            adminLoginForm.reset();
+            openModal(adminLoginModal);
         });
 
+        // This simulates the admin login check
+        adminLoginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const password = document.getElementById('admin-password').value;
+            if (password === ADMIN_PASSWORD) {
+                closeModal(adminLoginModal);
+                addItemForm.reset();
+                openModal(addItemModal);
+            } else {
+                document.getElementById('admin-error').textContent = 'Incorrect password. Please try again.';
+            }
+        });
+
+        // This handles adding the new item
         addItemForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            
-            // Get data from the form
             const newProduct = {
-                id: menuProducts.length + 1, // Simple ID generation
+                id: products.length + 10, // Create a unique ID
                 name: document.getElementById('product-name').value,
                 price: parseFloat(document.getElementById('product-price').value),
-                recipe: document.getElementById('product-recipe').value,
+                img: document.getElementById('product-image').value || 'https://i.imgur.com/placeholder.png'
             };
-            
-            // Add to our mock database
-            menuProducts.push(newProduct);
-            
-            // Re-render the table and close the modal
-            renderMenuItems();
-            closeModal();
-            addItemForm.reset();
+            products.push(newProduct);
+            renderProducts();
+            closeModal(addItemModal);
+        });
+
+        // Universal close logic for all modals
+        window.addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal')) {
+                closeModal(e.target);
+            }
         });
 
         // --- INITIAL RENDER ---
-        renderMenuItems();
+        renderProducts();
     });
     </script>
 </body>
