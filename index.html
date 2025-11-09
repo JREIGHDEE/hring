@@ -3,39 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Employee Management - WeekendMatcha</title>
+    <title>Human Resource | Admin View</title>
     <style>
-        /* --- Global Styles & Fonts --- */
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
-        :root {
-            --primary-green: #6B7A60;
-            --light-beige: #F4F1ED;
-            --dark-text: #333;
-            --border-color: #E0E0E0;
-            --add-green: #5A8D3D;
-            --update-yellow: #E8B646;
-            --archive-red: #D9534F;
-            --view-blue: #4A90E2;
-        }
-
         body {
-            font-family: 'Poppins', sans-serif;
             margin: 0;
-            background-color: #333; /* Dark background for the page frame */
+            font-family: 'Poppins', sans-serif;
+            background-color: #333;
+            color: #333;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
         }
 
-        /* --- Main Container --- */
         .pos-system-container {
-            display: flex;
             width: 1200px;
-            height: 800px;
-            background-color: var(--light-beige);
+            height: 700px;
+            background-color: #EFEBE4;
             border-radius: 20px;
+            display: flex;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             overflow: hidden;
         }
@@ -43,7 +31,7 @@
         /* --- Sidebar --- */
         .sidebar {
             width: 250px;
-            background-color: var(--primary-green);
+            background-color: #6B7A60;
             padding: 30px 20px;
             display: flex;
             flex-direction: column;
@@ -55,135 +43,159 @@
             margin-bottom: 40px;
         }
 
-        .sidebar .logo img {
-            width: 100px; /* Placeholder for logo */
+        .sidebar .logo-img {
+            font-size: 40px;
+            font-weight: bold;
+            background-color: #fff;
+            color: #6B7A60;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 5px;
         }
         
-        .sidebar .logo-placeholder {
-            font-size: 24px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            background-color: white;
-            color: var(--primary-green);
-            padding: 10px;
-            border-radius: 8px;
-            width: 120px;
-            margin: 0 auto;
+        .sidebar .logo-text {
+            font-size: 16px;
         }
 
 
-        .sidebar nav {
-            flex-grow: 1;
+        .sidebar nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
         }
 
-        .sidebar nav a {
-            display: block;
-            color: white;
-            text-decoration: none;
+        .sidebar nav li {
             padding: 15px 20px;
             margin: 10px 0;
-            border-radius: 8px;
-            font-size: 16px;
+            border-radius: 10px;
+            cursor: pointer;
             transition: background-color 0.3s;
         }
 
-        .sidebar nav a:hover {
-            background-color: rgba(255, 255, 255, 0.1);
+        .sidebar nav li:hover {
+            background-color: #5A6851;
         }
 
-        .sidebar nav a.active {
-            background-color: var(--light-beige);
-            color: var(--primary-green);
+        .sidebar nav li.active {
+            background-color: #EFEBE4;
+            color: #6B7A60;
             font-weight: 600;
         }
 
         .sidebar .logout {
-            color: white;
-            text-decoration: none;
+            margin-top: auto;
             padding: 15px 20px;
-            font-size: 16px;
-            display: flex;
-            align-items: center;
+            cursor: pointer;
         }
+        
+        .sidebar .logout i {
+             transform: rotate(180deg);
+             display: inline-block;
+             margin-right: 10px;
+        }
+
 
         /* --- Main Content --- */
         .main-content {
-            flex-grow: 1;
-            padding: 30px 40px;
+            flex: 1;
+            padding: 20px 40px;
             display: flex;
             flex-direction: column;
         }
-
-        header {
-            width: 100%;
-            padding-bottom: 20px;
-        }
-
-        header .page-title {
-            color: #333;
-            font-size: 28px;
-            font-weight: 700;
-            margin: 0;
-        }
         
-        .header-info {
+        .header {
             font-size: 14px;
             color: #888;
-            margin-top: -5px;
+            margin-bottom: 10px;
         }
 
-        .controls {
+        .main-content h1 {
+            font-size: 32px;
+            margin: 0 0 20px 0;
+            color: #444;
+        }
+
+        /* --- Toolbar --- */
+        .toolbar {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            margin-bottom: 25px;
+            gap: 15px;
+            margin-bottom: 20px;
         }
 
         .search-container {
             position: relative;
+            flex-grow: 1;
         }
 
         .search-container input {
-            width: 300px;
+            width: 100%;
             padding: 10px 15px 10px 40px;
-            border-radius: 20px;
-            border: 1px solid var(--border-color);
-            font-size: 14px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 16px;
         }
         
-        .search-container::before {
-            content: '🔍'; /* Search icon */
+        .search-container i {
             position: absolute;
             left: 15px;
             top: 50%;
             transform: translateY(-50%);
-            color: #aaa;
+            color: #999;
         }
 
-        .button-group button {
+        .toolbar button {
             padding: 10px 20px;
-            border: none;
             border-radius: 8px;
+            border: none;
             font-size: 14px;
-            font-weight: 600;
+            font-weight: 500;
             cursor: pointer;
-            margin-left: 10px;
-            color: white;
-            transition: opacity 0.3s;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
-        .button-group button:hover {
-            opacity: 0.9;
+        
+        .toolbar button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
 
-        #btn-add { background-color: var(--add-green); }
-        #btn-update { background-color: var(--update-yellow); }
-        #btn-archive { background-color: var(--archive-red); }
-        #btn-view-log { background-color: var(--view-blue); }
+        .btn-add { background-color: #6B7A60; color: white; }
+        .btn-update { background-color: #E0C870; color: #555; }
+        .btn-archive { background-color: #D9857E; color: white; }
+        .btn-log { background-color: #6A94A7; color: white; }
+        
+        /* --- Filter Section --- */
+        .filter-section {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .filter-section button {
+            padding: 8px 15px;
+            border: 1px solid #ccc;
+            background-color: #f8f8f8;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .filter-section button.active,
+        .filter-section button:hover {
+            background-color: #6B7A60;
+            color: white;
+            border-color: #6B7A60;
+        }
 
         /* --- Employee Table --- */
         .table-container {
             flex-grow: 1;
-            overflow-y: auto; /* Adds scroll if content overflows */
+            overflow-y: auto;
+            border-radius: 8px;
+            border: 1px solid #ddd;
         }
         
         table {
@@ -192,16 +204,18 @@
         }
 
         thead {
-            background-color: var(--primary-green);
+            background-color: #6B7A60;
             color: white;
+            position: sticky;
+            top: 0;
         }
-        
+
         th, td {
             padding: 15px;
             text-align: left;
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: 1px solid #ddd;
         }
-
+        
         th {
             font-weight: 600;
         }
@@ -212,53 +226,56 @@
         }
 
         tbody tr:hover {
-            background-color: #f9f9f9;
-        }
-        
-        .status-active {
-            color: #2E7D32;
-            font-weight: 500;
-        }
-
-        .status-on-leave {
-            color: #E65100;
-            font-weight: 500;
+            background-color: #f7f5f1;
         }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
 
     <div class="pos-system-container">
-        <!-- Sidebar Navigation -->
+        <!-- Sidebar -->
         <aside class="sidebar">
             <div class="logo">
-                <div class="logo-placeholder">WeekendMatcha</div>
+                 <div class="logo-img">WM</div>
+                 <div class="logo-text">WeekendMatcha</div>
             </div>
             <nav>
-                <a href="#">Inventory</a>
-                <a href="#">Sales</a>
-                <a href="#" class="active">Human Resource</a>
+                <ul>
+                    <li>Inventory</li>
+                    <li>Sales</li>
+                    <li class="active">Human Resource</li>
+                </ul>
             </nav>
-            <a href="#" class="logout">➔ Log Out</a>
+            <div class="logout">
+               <i>&#10148;</i> Log Out
+            </div>
         </aside>
 
-        <!-- Main Content Area -->
+        <!-- Main Content -->
         <main class="main-content">
-            <header>
-                <p class="header-info">Human Resource [ADMIN VIEW]</p>
-                <h1 class="page-title">Employee Management</h1>
-            </header>
+            <div class="header">Human Resource | ADMIN VIEW</div>
+            <h1>Employee Management</h1>
 
-            <div class="controls">
+            <div class="toolbar">
                 <div class="search-container">
+                    <i class="fas fa-search"></i>
                     <input type="text" id="searchInput" placeholder="Search...">
                 </div>
-                <div class="button-group">
-                    <button id="btn-add">ADD</button>
-                    <button id="btn-update">UPDATE</button>
-                    <button id="btn-archive">ARCHIVE</button>
-                    <button id="btn-view-log">VIEW ARCHIVE LOG</button>
-                </div>
+                <button class="btn-add">ADD</button>
+                <button class="btn-update">UPDATE</button>
+                <button class="btn-archive">ARCHIVE</button>
+                <button class="btn-log">VIEW ARCHIVE LOG</button>
+            </div>
+            
+            <div class="filter-section" id="filter-buttons">
+                 <button class="active" data-column="-1">All</button>
+                 <button data-column="0">Employee ID</button>
+                 <button data-column="1">Full Name</button>
+                 <button data-column="2">Role</button>
+                 <button data-column="3">Status</button>
+                 <button data-column="4">Date Hired</button>
+                 <button data-column="5">Contact</button>
             </div>
 
             <div class="table-container">
@@ -278,7 +295,7 @@
                             <td>EMP1001</td>
                             <td>Reigh Denolan</td>
                             <td>HR Admin</td>
-                            <td class="status-active">Active</td>
+                            <td>Active</td>
                             <td>2025-10-10</td>
                             <td>2025-10-10</td>
                         </tr>
@@ -286,7 +303,7 @@
                             <td>EMP1002</td>
                             <td>Yutaka Kurita</td>
                             <td>Inventory Manager</td>
-                            <td class="status-active">Active</td>
+                            <td>Active</td>
                             <td>2025-10-15</td>
                             <td>2025-10-15</td>
                         </tr>
@@ -294,65 +311,101 @@
                             <td>EMP1003</td>
                             <td>Dawn Go</td>
                             <td>Sales Associate</td>
-                            <td class="status-active">Active</td>
+                            <td>Active</td>
                             <td>2025-09-01</td>
                             <td>2025-09-01</td>
                         </tr>
-                        <tr>
+                         <tr>
                             <td>EMP1004</td>
                             <td>John Doe</td>
                             <td>Accountant</td>
-                            <td class="status-on-leave">On Leave</td>
+                            <td>On Leave</td>
                             <td>2025-07-20</td>
                             <td>2025-07-20</td>
                         </tr>
-                        <!-- Add more employee rows here if needed -->
+                         <tr>
+                            <td>EMP1005</td>
+                            <td>Jane Smith</td>
+                            <td>Sales Associate</td>
+                            <td>Active</td>
+                            <td>2024-11-20</td>
+                            <td>2024-11-20</td>
+                        </tr>
+                         <tr>
+                            <td>EMP1006</td>
+                            <td>Michael Chen</td>
+                            <td>Inventory Staff</td>
+                            <td>On Leave</td>
+                            <td>2025-02-15</td>
+                            <td>2025-02-15</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
         </main>
     </div>
 
-    <script>
-        // --- JavaScript for Search Functionality ---
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    const filterButtonsContainer = document.getElementById('filter-buttons');
+    const employeeTable = document.getElementById('employeeTable').getElementsByTagName('tbody')[0];
+    const rows = employeeTable.getElementsByTagName('tr');
+    
+    let activeFilterColumn = -1; // -1 means search all columns
 
-        // Get the input field and the table
-        const searchInput = document.getElementById('searchInput');
-        const employeeTable = document.getElementById('employeeTable');
-        const tableRows = employeeTable.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+    // --- Filter Button Logic ---
+    filterButtonsContainer.addEventListener('click', function(e) {
+        if (e.target.tagName === 'BUTTON') {
+            // Remove active class from previous button
+            filterButtonsContainer.querySelector('.active').classList.remove('active');
+            
+            // Add active class to clicked button
+            e.target.classList.add('active');
+            
+            // Update the active filter column
+            activeFilterColumn = parseInt(e.target.getAttribute('data-column'));
+            
+            // Trigger search to re-filter the table with the new setting
+            performSearch();
+        }
+    });
 
-        // Add an event listener for the 'keyup' event on the search input
-        searchInput.addEventListener('keyup', function() {
-            // Get the search query, convert to lower case for case-insensitive search. [1]
-            const query = searchInput.value.toLowerCase();
+    // --- Search Input Logic ---
+    searchInput.addEventListener('keyup', performSearch);
+    
+    function performSearch() {
+        const searchText = searchInput.value.toLowerCase();
 
-            // Loop through all table body rows
-            for (let i = 0; i < tableRows.length; i++) {
-                const row = tableRows[i];
-                const cells = row.getElementsByTagName('td');
-                let matchFound = false;
+        for (let i = 0; i < rows.length; i++) {
+            const row = rows[i];
+            let isVisible = false;
 
-                // Loop through all cells in the current row
-                for (let j = 0; j < cells.length; j++) {
-                    const cell = cells[j];
-                    if (cell) {
-                        // If the cell's text content includes the query, a match is found
-                        if (cell.textContent.toLowerCase().indexOf(query) > -1) {
-                            matchFound = true;
-                            break; // No need to check other cells in this row
-                        }
+            if (activeFilterColumn === -1) {
+                // Search all columns
+                for (let j = 0; j < row.cells.length; j++) {
+                    const cellText = row.cells[j].textContent.toLowerCase();
+                    if (cellText.includes(searchText)) {
+                        isVisible = true;
+                        break;
                     }
                 }
-
-                // If a match is found, display the row, otherwise hide it. [1]
-                if (matchFound) {
-                    row.style.display = "";
-                } else {
-                    row.style.display = "none";
+            } else {
+                // Search only the selected column
+                const cell = row.cells[activeFilterColumn];
+                if (cell) {
+                    const cellText = cell.textContent.toLowerCase();
+                    if (cellText.includes(searchText)) {
+                        isVisible = true;
+                    }
                 }
             }
-        });
-    </script>
+            
+            row.style.display = isVisible ? "" : "none";
+        }
+    }
+});
+</script>
 
 </body>
-</html>
+</html>```
