@@ -38,66 +38,15 @@
             color: white;
         }
 
-        .sidebar .logo {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .sidebar .logo-img {
-            font-size: 40px;
-            font-weight: bold;
-            background-color: #fff;
-            color: #6B7A60;
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 5px;
-        }
-        
-        .sidebar .logo-text {
-            font-size: 16px;
-        }
-
-
-        .sidebar nav ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .sidebar nav li {
-            padding: 15px 20px;
-            margin: 10px 0;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .sidebar nav li:hover {
-            background-color: #5A6851;
-        }
-
-        .sidebar nav li.active {
-            background-color: #EFEBE4;
-            color: #6B7A60;
-            font-weight: 600;
-        }
-
-        .sidebar .logout {
-            margin-top: auto;
-            padding: 15px 20px;
-            cursor: pointer;
-        }
-        
-        .sidebar .logout i {
-             transform: rotate(180deg);
-             display: inline-block;
-             margin-right: 10px;
-        }
-
+        .sidebar .logo { text-align: center; margin-bottom: 40px; }
+        .sidebar .logo-img { font-size: 40px; font-weight: bold; background-color: #fff; color: #6B7A60; width: 80px; height: 80px; border-radius: 50%; display: inline-flex; justify-content: center; align-items: center; margin-bottom: 5px; }
+        .sidebar .logo-text { font-size: 16px; }
+        .sidebar nav ul { list-style: none; padding: 0; margin: 0; }
+        .sidebar nav li { padding: 15px 20px; margin: 10px 0; border-radius: 10px; cursor: pointer; transition: background-color 0.3s; }
+        .sidebar nav li:hover { background-color: #5A6851; }
+        .sidebar nav li.active { background-color: #EFEBE4; color: #6B7A60; font-weight: 600; }
+        .sidebar .logout { margin-top: auto; padding: 15px 20px; cursor: pointer; }
+        .sidebar .logout i { transform: rotate(180deg); display: inline-block; margin-right: 10px; }
 
         /* --- Main Content --- */
         .main-content {
@@ -107,17 +56,8 @@
             flex-direction: column;
         }
         
-        .header {
-            font-size: 14px;
-            color: #888;
-            margin-bottom: 10px;
-        }
-
-        .main-content h1 {
-            font-size: 32px;
-            margin: 0 0 20px 0;
-            color: #444;
-        }
+        .header { font-size: 14px; color: #888; margin-bottom: 10px; }
+        .main-content h1 { font-size: 32px; margin: 0 0: 20px 0; color: #444; }
 
         /* --- Toolbar --- */
         .toolbar {
@@ -125,27 +65,7 @@
             align-items: center;
             gap: 15px;
             margin-bottom: 20px;
-        }
-
-        .search-container {
-            position: relative;
-            flex-grow: 1;
-        }
-
-        .search-container input {
-            width: 100%;
-            padding: 10px 15px 10px 40px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-            font-size: 16px;
-        }
-        
-        .search-container i {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #999;
+            padding-top: 20px;
         }
 
         .toolbar button {
@@ -162,34 +82,13 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
-
+        
+        .btn-search { background-color: #6B7A60; color: white; margin-right: auto; } /* Pushes other buttons to the right */
         .btn-add { background-color: #6B7A60; color: white; }
         .btn-update { background-color: #E0C870; color: #555; }
         .btn-archive { background-color: #D9857E; color: white; }
         .btn-log { background-color: #6A94A7; color: white; }
         
-        /* --- Filter Section --- */
-        .filter-section {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-        .filter-section button {
-            padding: 8px 15px;
-            border: 1px solid #ccc;
-            background-color: #f8f8f8;
-            border-radius: 20px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        .filter-section button.active,
-        .filter-section button:hover {
-            background-color: #6B7A60;
-            color: white;
-            border-color: #6B7A60;
-        }
-
         /* --- Employee Table --- */
         .table-container {
             flex-grow: 1;
@@ -198,40 +97,107 @@
             border: 1px solid #ddd;
         }
         
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        thead {
-            background-color: #6B7A60;
-            color: white;
-            position: sticky;
+        table { width: 100%; border-collapse: collapse; }
+        thead { background-color: #6B7A60; color: white; position: sticky; top: 0; z-index: 10; }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { font-weight: 600; }
+        tbody tr { background-color: #fff; transition: background-color 0.2s; }
+        tbody tr:hover { background-color: #f7f5f1; }
+        
+        /* --- MODAL STYLES --- */
+        .modal-overlay {
+            position: fixed;
             top: 0;
-        }
-
-        th, td {
-            padding: 15px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: none; /* Hidden by default */
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
         }
         
-        th {
-            font-weight: 600;
-        }
-
-        tbody tr {
+        .modal-content {
             background-color: #fff;
-            transition: background-color 0.2s;
+            padding: 30px;
+            border-radius: 10px;
+            width: 500px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            position: relative;
+        }
+        
+        .modal-close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #888;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+        }
+        .modal-close-btn:hover { color: #333; }
+        
+        .modal-content h2 {
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+        
+        .modal-search-input {
+            width: 100%;
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .modal-filter-section {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .modal-filter-section button {
+            padding: 8px 15px;
+            border: 1px solid #ccc;
+            background-color: #f8f8f8;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .modal-filter-section button.active,
+        .modal-filter-section button:hover {
+            background-color: #6B7A60;
+            color: white;
+            border-color: #6B7A60;
         }
 
-        tbody tr:hover {
-            background-color: #f7f5f1;
-        }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
+
+    <!-- MODAL HTML STRUCTURE -->
+    <div class="modal-overlay" id="searchModal">
+        <div class="modal-content">
+            <button class="modal-close-btn" id="closeModalBtn">&times;</button>
+            <h2>Search & Filter Employees</h2>
+            <input type="text" id="modalSearchInput" class="modal-search-input" placeholder="Search...">
+            <div class="modal-filter-section" id="modal-filter-buttons">
+                 <button class="active" data-column="-1">All</button>
+                 <button data-column="0">Employee ID</button>
+                 <button data-column="1">Full Name</button>
+                 <button data-column="2">Role</button>
+                 <button data-column="3">Status</button>
+                 <button data-column="4">Date Hired</button>
+                 <button data-column="5">Contact</button>
+            </div>
+        </div>
+    </div>
+
 
     <div class="pos-system-container">
         <!-- Sidebar -->
@@ -258,24 +224,11 @@
             <h1>Employee Management</h1>
 
             <div class="toolbar">
-                <div class="search-container">
-                    <i class="fas fa-search"></i>
-                    <input type="text" id="searchInput" placeholder="Search...">
-                </div>
+                <button class="btn-search" id="openSearchModalBtn"><i class="fas fa-search"></i> SEARCH</button>
                 <button class="btn-add">ADD</button>
                 <button class="btn-update">UPDATE</button>
                 <button class="btn-archive">ARCHIVE</button>
                 <button class="btn-log">VIEW ARCHIVE LOG</button>
-            </div>
-            
-            <div class="filter-section" id="filter-buttons">
-                 <button class="active" data-column="-1">All</button>
-                 <button data-column="0">Employee ID</button>
-                 <button data-column="1">Full Name</button>
-                 <button data-column="2">Role</button>
-                 <button data-column="3">Status</button>
-                 <button data-column="4">Date Hired</button>
-                 <button data-column="5">Contact</button>
             </div>
 
             <div class="table-container">
@@ -291,54 +244,12 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>EMP1001</td>
-                            <td>Reigh Denolan</td>
-                            <td>HR Admin</td>
-                            <td>Active</td>
-                            <td>2025-10-10</td>
-                            <td>2025-10-10</td>
-                        </tr>
-                        <tr>
-                            <td>EMP1002</td>
-                            <td>Yutaka Kurita</td>
-                            <td>Inventory Manager</td>
-                            <td>Active</td>
-                            <td>2025-10-15</td>
-                            <td>2025-10-15</td>
-                        </tr>
-                        <tr>
-                            <td>EMP1003</td>
-                            <td>Dawn Go</td>
-                            <td>Sales Associate</td>
-                            <td>Active</td>
-                            <td>2025-09-01</td>
-                            <td>2025-09-01</td>
-                        </tr>
-                         <tr>
-                            <td>EMP1004</td>
-                            <td>John Doe</td>
-                            <td>Accountant</td>
-                            <td>On Leave</td>
-                            <td>2025-07-20</td>
-                            <td>2025-07-20</td>
-                        </tr>
-                         <tr>
-                            <td>EMP1005</td>
-                            <td>Jane Smith</td>
-                            <td>Sales Associate</td>
-                            <td>Active</td>
-                            <td>2024-11-20</td>
-                            <td>2024-11-20</td>
-                        </tr>
-                         <tr>
-                            <td>EMP1006</td>
-                            <td>Michael Chen</td>
-                            <td>Inventory Staff</td>
-                            <td>On Leave</td>
-                            <td>2025-02-15</td>
-                            <td>2025-02-15</td>
-                        </tr>
+                        <tr> <td>EMP1001</td> <td>Reigh Denolan</td> <td>HR Admin</td> <td>Active</td> <td>2025-10-10</td> <td>2025-10-10</td> </tr>
+                        <tr> <td>EMP1002</td> <td>Yutaka Kurita</td> <td>Inventory Manager</td> <td>Active</td> <td>2025-10-15</td> <td>2025-10-15</td> </tr>
+                        <tr> <td>EMP1003</td> <td>Dawn Go</td> <td>Sales Associate</td> <td>Active</td> <td>2025-09-01</td> <td>2025-09-01</td> </tr>
+                        <tr> <td>EMP1004</td> <td>John Doe</td> <td>Accountant</td> <td>On Leave</td> <td>2025-07-20</td> <td>2025-07-20</td> </tr>
+                        <tr> <td>EMP1005</td> <td>Jane Smith</td> <td>Sales Associate</td> <td>Active</td> <td>2024-11-20</td> <td>2024-11-20</td> </tr>
+                        <tr> <td>EMP1006</td> <td>Michael Chen</td> <td>Inventory Staff</td> <td>On Leave</td> <td>2025-02-15</td> <td>2025-02-15</td> </tr>
                     </tbody>
                 </table>
             </div>
@@ -347,35 +258,53 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const searchInput = document.getElementById('searchInput');
-    const filterButtonsContainer = document.getElementById('filter-buttons');
+    // Modal elements
+    const searchModal = document.getElementById('searchModal');
+    const openSearchModalBtn = document.getElementById('openSearchModalBtn');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    
+    // Search and filter elements (inside the modal)
+    const modalSearchInput = document.getElementById('modalSearchInput');
+    const filterButtonsContainer = document.getElementById('modal-filter-buttons');
+    
+    // Table elements
     const employeeTable = document.getElementById('employeeTable').getElementsByTagName('tbody')[0];
     const rows = employeeTable.getElementsByTagName('tr');
     
     let activeFilterColumn = -1; // -1 means search all columns
 
-    // --- Filter Button Logic ---
-    filterButtonsContainer.addEventListener('click', function(e) {
-        if (e.target.tagName === 'BUTTON') {
-            // Remove active class from previous button
-            filterButtonsContainer.querySelector('.active').classList.remove('active');
-            
-            // Add active class to clicked button
-            e.target.classList.add('active');
-            
-            // Update the active filter column
-            activeFilterColumn = parseInt(e.target.getAttribute('data-column'));
-            
-            // Trigger search to re-filter the table with the new setting
-            performSearch();
+    // --- Modal Control Logic ---
+    openSearchModalBtn.addEventListener('click', () => {
+        searchModal.style.display = 'flex';
+    });
+
+    closeModalBtn.addEventListener('click', () => {
+        searchModal.style.display = 'none';
+    });
+
+    // Close modal if user clicks on the overlay
+    searchModal.addEventListener('click', (e) => {
+        if (e.target === searchModal) {
+            searchModal.style.display = 'none';
         }
     });
 
-    // --- Search Input Logic ---
-    searchInput.addEventListener('keyup', performSearch);
+    // --- Filter and Search Logic ---
+    filterButtonsContainer.addEventListener('click', function(e) {
+        if (e.target.tagName === 'BUTTON') {
+            // Update active state on filter buttons
+            filterButtonsContainer.querySelector('.active').classList.remove('active');
+            e.target.classList.add('active');
+            
+            activeFilterColumn = parseInt(e.target.getAttribute('data-column'));
+            performSearch(); // Re-run search with new filter
+        }
+    });
+
+    modalSearchInput.addEventListener('keyup', performSearch);
     
     function performSearch() {
-        const searchText = searchInput.value.toLowerCase();
+        const searchText = modalSearchInput.value.toLowerCase();
 
         for (let i = 0; i < rows.length; i++) {
             const row = rows[i];
@@ -408,4 +337,4 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 </body>
-</html>```
+</html>
