@@ -37,7 +37,6 @@
             flex-direction: column;
             color: white;
         }
-
         .sidebar .logo { text-align: center; margin-bottom: 40px; }
         .sidebar .logo-img { font-size: 40px; font-weight: bold; background-color: #fff; color: #6B7A60; width: 80px; height: 80px; border-radius: 50%; display: inline-flex; justify-content: center; align-items: center; margin-bottom: 5px; }
         .sidebar .logo-text { font-size: 16px; }
@@ -55,9 +54,8 @@
             display: flex;
             flex-direction: column;
         }
-        
         .header { font-size: 14px; color: #888; margin-bottom: 10px; }
-        .main-content h1 { font-size: 32px; margin: 0 0: 20px 0; color: #444; }
+        .main-content h1 { font-size: 32px; margin: 0 0 20px 0; color: #444; }
 
         /* --- Toolbar --- */
         .toolbar {
@@ -65,9 +63,7 @@
             align-items: center;
             gap: 15px;
             margin-bottom: 20px;
-            padding-top: 20px;
         }
-
         .toolbar button {
             padding: 10px 20px;
             border-radius: 8px;
@@ -77,75 +73,49 @@
             cursor: pointer;
             transition: transform 0.2s, box-shadow 0.2s;
         }
-        
-        .toolbar button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        
-        .btn-search { background-color: #6B7A60; color: white; margin-right: auto; } /* Pushes other buttons to the right */
+        .toolbar button:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
         .btn-add { background-color: #6B7A60; color: white; }
         .btn-update { background-color: #E0C870; color: #555; }
         .btn-archive { background-color: #D9857E; color: white; }
         .btn-log { background-color: #6A94A7; color: white; }
-        
-        /* --- Employee Table --- */
-        .table-container {
-            flex-grow: 1;
-            overflow-y: auto;
+        .btn-search { background-color: #5A6851; color: white; }
+
+        /* --- Popover Styles --- */
+        .search-popover-container {
+            position: relative; /* Anchor for the popover */
+            margin-right: auto; /* Pushes other buttons to the right */
+        }
+
+        #searchPopover {
+            display: none; /* Hidden by default */
+            position: absolute;
+            top: calc(100% + 10px); /* Position below the button with a 10px gap */
+            left: 0;
+            width: 450px;
+            background-color: #fff;
             border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            padding: 20px;
+            z-index: 100;
             border: 1px solid #ddd;
         }
-        
-        table { width: 100%; border-collapse: collapse; }
-        thead { background-color: #6B7A60; color: white; position: sticky; top: 0; z-index: 10; }
-        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #ddd; }
-        th { font-weight: 600; }
-        tbody tr { background-color: #fff; transition: background-color 0.2s; }
-        tbody tr:hover { background-color: #f7f5f1; }
-        
-        /* --- MODAL STYLES --- */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.6);
-            display: none; /* Hidden by default */
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
+
+        #searchPopover.show {
+            display: block; /* Show the popover */
         }
         
-        .modal-content {
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 10px;
-            width: 500px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            position: relative;
-        }
-        
-        .modal-close-btn {
+        /* Caret/Arrow pointing up to the button */
+        #searchPopover::before {
+            content: '';
             position: absolute;
-            top: 10px;
-            right: 15px;
-            font-size: 24px;
-            font-weight: bold;
-            color: #888;
-            cursor: pointer;
-            border: none;
-            background: transparent;
+            bottom: 100%; /* Position it at the top of the popover */
+            left: 20px;
+            border-width: 8px;
+            border-style: solid;
+            border-color: transparent transparent #fff transparent; /* Creates the triangle */
         }
-        .modal-close-btn:hover { color: #333; }
-        
-        .modal-content h2 {
-            margin-top: 0;
-            margin-bottom: 20px;
-        }
-        
-        .modal-search-input {
+
+        .popover-search-input {
             width: 100%;
             padding: 10px 15px;
             border-radius: 8px;
@@ -153,51 +123,29 @@
             font-size: 16px;
             margin-bottom: 20px;
         }
-        
-        .modal-filter-section {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
+        .popover-filter-section {
+            display: flex; gap: 10px; flex-wrap: wrap;
         }
-        .modal-filter-section button {
-            padding: 8px 15px;
-            border: 1px solid #ccc;
-            background-color: #f8f8f8;
-            border-radius: 20px;
-            cursor: pointer;
-            transition: all 0.3s;
+        .popover-filter-section button {
+            padding: 8px 15px; border: 1px solid #ccc; background-color: #f8f8f8; border-radius: 20px; cursor: pointer; transition: all 0.3s;
         }
-        .modal-filter-section button.active,
-        .modal-filter-section button:hover {
-            background-color: #6B7A60;
-            color: white;
-            border-color: #6B7A60;
+        .popover-filter-section button.active,
+        .popover-filter-section button:hover {
+            background-color: #6B7A60; color: white; border-color: #6B7A60;
         }
 
+        /* --- Employee Table --- */
+        .table-container { flex-grow: 1; overflow-y: auto; border-radius: 8px; border: 1px solid #ddd; }
+        table { width: 100%; border-collapse: collapse; }
+        thead { background-color: #6B7A60; color: white; position: sticky; top: 0; z-index: 10; }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { font-weight: 600; }
+        tbody tr { background-color: #fff; transition: background-color 0.2s; }
+        tbody tr:hover { background-color: #f7f5f1; }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-
-    <!-- MODAL HTML STRUCTURE -->
-    <div class="modal-overlay" id="searchModal">
-        <div class="modal-content">
-            <button class="modal-close-btn" id="closeModalBtn">&times;</button>
-            <h2>Search & Filter Employees</h2>
-            <input type="text" id="modalSearchInput" class="modal-search-input" placeholder="Search...">
-            <div class="modal-filter-section" id="modal-filter-buttons">
-                 <button class="active" data-column="-1">All</button>
-                 <button data-column="0">Employee ID</button>
-                 <button data-column="1">Full Name</button>
-                 <button data-column="2">Role</button>
-                 <button data-column="3">Status</button>
-                 <button data-column="4">Date Hired</button>
-                 <button data-column="5">Contact</button>
-            </div>
-        </div>
-    </div>
-
 
     <div class="pos-system-container">
         <!-- Sidebar -->
@@ -224,7 +172,20 @@
             <h1>Employee Management</h1>
 
             <div class="toolbar">
-                <button class="btn-search" id="openSearchModalBtn"><i class="fas fa-search"></i> SEARCH</button>
+                <div class="search-popover-container">
+                    <button class="btn-search" id="openSearchPopoverBtn"><i class="fas fa-search"></i> SEARCH</button>
+                    <!-- POPOVER HTML -->
+                    <div id="searchPopover">
+                        <input type="text" id="popoverSearchInput" class="popover-search-input" placeholder="Search...">
+                        <div class="popover-filter-section" id="popover-filter-buttons">
+                             <button class="active" data-column="-1">All</button>
+                             <button data-column="0">Employee ID</button>
+                             <button data-column="1">Full Name</button>
+                             <button data-column="2">Role</button>
+                             <button data-column="3">Status</button>
+                        </div>
+                    </div>
+                </div>
                 <button class="btn-add">ADD</button>
                 <button class="btn-update">UPDATE</button>
                 <button class="btn-archive">ARCHIVE</button>
@@ -244,12 +205,12 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr> <td>EMP1001</td> <td>Reigh Denolan</td> <td>HR Admin</td> <td>Active</td> <td>2025-10-10</td> <td>2025-10-10</td> </tr>
-                        <tr> <td>EMP1002</td> <td>Yutaka Kurita</td> <td>Inventory Manager</td> <td>Active</td> <td>2025-10-15</td> <td>2025-10-15</td> </tr>
-                        <tr> <td>EMP1003</td> <td>Dawn Go</td> <td>Sales Associate</td> <td>Active</td> <td>2025-09-01</td> <td>2025-09-01</td> </tr>
-                        <tr> <td>EMP1004</td> <td>John Doe</td> <td>Accountant</td> <td>On Leave</td> <td>2025-07-20</td> <td>2025-07-20</td> </tr>
-                        <tr> <td>EMP1005</td> <td>Jane Smith</td> <td>Sales Associate</td> <td>Active</td> <td>2024-11-20</td> <td>2024-11-20</td> </tr>
-                        <tr> <td>EMP1006</td> <td>Michael Chen</td> <td>Inventory Staff</td> <td>On Leave</td> <td>2025-02-15</td> <td>2025-02-15</td> </tr>
+                        <tr><td>EMP1001</td><td>Reigh Denolan</td><td>HR Admin</td><td>Active</td><td>2025-10-10</td><td>2025-10-10</td></tr>
+                        <tr><td>EMP1002</td><td>Yutaka Kurita</td><td>Inventory Manager</td><td>Active</td><td>2025-10-15</td><td>2025-10-15</td></tr>
+                        <tr><td>EMP1003</td><td>Dawn Go</td><td>Sales Associate</td><td>Active</td><td>2025-09-01</td><td>2025-09-01</td></tr>
+                        <tr><td>EMP1004</td><td>John Doe</td><td>Accountant</td><td>On Leave</td><td>2025-07-20</td><td>2025-07-20</td></tr>
+                        <tr><td>EMP1005</td><td>Jane Smith</td><td>Sales Associate</td><td>Active</td><td>2024-11-20</td><td>2024-11-20</td></tr>
+                        <tr><td>EMP1006</td><td>Michael Chen</td><td>Inventory Staff</td><td>On Leave</td><td>2025-02-15</td><td>2025-02-15</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -258,14 +219,13 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Modal elements
-    const searchModal = document.getElementById('searchModal');
-    const openSearchModalBtn = document.getElementById('openSearchModalBtn');
-    const closeModalBtn = document.getElementById('closeModalBtn');
+    // Popover elements
+    const openSearchPopoverBtn = document.getElementById('openSearchPopoverBtn');
+    const searchPopover = document.getElementById('searchPopover');
     
-    // Search and filter elements (inside the modal)
-    const modalSearchInput = document.getElementById('modalSearchInput');
-    const filterButtonsContainer = document.getElementById('modal-filter-buttons');
+    // Search and filter elements (inside the popover)
+    const popoverSearchInput = document.getElementById('popoverSearchInput');
+    const filterButtonsContainer = document.getElementById('popover-filter-buttons');
     
     // Table elements
     const employeeTable = document.getElementById('employeeTable').getElementsByTagName('tbody')[0];
@@ -273,63 +233,55 @@ document.addEventListener('DOMContentLoaded', function() {
     
     let activeFilterColumn = -1; // -1 means search all columns
 
-    // --- Modal Control Logic ---
-    openSearchModalBtn.addEventListener('click', () => {
-        searchModal.style.display = 'flex';
+    // --- Popover Control Logic ---
+    openSearchPopoverBtn.addEventListener('click', (event) => {
+        // Toggles the 'show' class to display or hide the popover
+        searchPopover.classList.toggle('show');
+        // Prevents the window click event from firing immediately
+        event.stopPropagation();
     });
 
-    closeModalBtn.addEventListener('click', () => {
-        searchModal.style.display = 'none';
-    });
-
-    // Close modal if user clicks on the overlay
-    searchModal.addEventListener('click', (e) => {
-        if (e.target === searchModal) {
-            searchModal.style.display = 'none';
+    // Close popover if user clicks anywhere outside of it
+    window.addEventListener('click', (event) => {
+        if (searchPopover.classList.contains('show') && !searchPopover.contains(event.target)) {
+            searchPopover.classList.remove('show');
         }
+    });
+
+    // Prevent clicks inside the popover from closing it
+    searchPopover.addEventListener('click', (event) => {
+        event.stopPropagation();
     });
 
     // --- Filter and Search Logic ---
     filterButtonsContainer.addEventListener('click', function(e) {
         if (e.target.tagName === 'BUTTON') {
-            // Update active state on filter buttons
             filterButtonsContainer.querySelector('.active').classList.remove('active');
             e.target.classList.add('active');
-            
             activeFilterColumn = parseInt(e.target.getAttribute('data-column'));
-            performSearch(); // Re-run search with new filter
+            performSearch();
         }
     });
 
-    modalSearchInput.addEventListener('keyup', performSearch);
+    popoverSearchInput.addEventListener('keyup', performSearch);
     
     function performSearch() {
-        const searchText = modalSearchInput.value.toLowerCase();
-
-        for (let i = 0; i < rows.length; i++) {
-            const row = rows[i];
+        const searchText = popoverSearchInput.value.toLowerCase();
+        for (let row of rows) {
             let isVisible = false;
-
-            if (activeFilterColumn === -1) {
-                // Search all columns
-                for (let j = 0; j < row.cells.length; j++) {
-                    const cellText = row.cells[j].textContent.toLowerCase();
-                    if (cellText.includes(searchText)) {
+            if (activeFilterColumn === -1) { // Search all columns
+                for (let cell of row.cells) {
+                    if (cell.textContent.toLowerCase().includes(searchText)) {
                         isVisible = true;
                         break;
                     }
                 }
-            } else {
-                // Search only the selected column
+            } else { // Search only the selected column
                 const cell = row.cells[activeFilterColumn];
-                if (cell) {
-                    const cellText = cell.textContent.toLowerCase();
-                    if (cellText.includes(searchText)) {
-                        isVisible = true;
-                    }
+                if (cell && cell.textContent.toLowerCase().includes(searchText)) {
+                    isVisible = true;
                 }
             }
-            
             row.style.display = isVisible ? "" : "none";
         }
     }
