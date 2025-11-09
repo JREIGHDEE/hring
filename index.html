@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>POS System with Employee Integration</title>
+    <title>Admin - Menu Management</title>
     <style>
         :root {
             --primary-bg: #3e4a3e;
@@ -14,65 +14,41 @@
             --text-light: #fff;
             --accent-green: #679469;
             --accent-blue: #5a7a9c;
-            --accent-red: #D96C6C;
             --border-color: #dee2e6;
         }
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
         
         body { margin: 0; font-family: 'Inter', sans-serif; background-color: var(--primary-bg); color: var(--text-dark); height: 100vh; overflow: hidden; }
-        .hidden { display: none !important; }
 
         .app-shell { display: flex; width: 100%; height: 100%; padding: 20px; box-sizing: border-box; }
         .sidebar { width: 250px; background-color: var(--secondary-bg); border-radius: 12px; padding: 20px; display: flex; flex-direction: column; color: var(--text-light); flex-shrink: 0; }
-        .main-content { flex-grow: 1; background-color: var(--content-bg); margin-left: 20px; border-radius: 12px; padding: 30px; overflow-y: hidden; display: flex; flex-direction: column; }
+        .main-content { flex-grow: 1; background-color: var(--content-bg); margin-left: 20px; border-radius: 12px; padding: 30px; overflow-y: auto; }
         
-        /* --- Sidebar User Display (NEW) --- */
-        .sidebar-user { text-align: center; padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.2); margin-bottom: 20px; }
-        .sidebar-user .avatar { width: 60px; height: 60px; border-radius: 50%; background-color: var(--primary-bg); margin: 0 auto 10px auto; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.5em; }
-        .sidebar-user .name { font-weight: bold; }
-        .sidebar-user .id { font-size: 0.9em; opacity: 0.8; }
-
-        .sidebar-header { font-size: 1.5em; font-weight: bold; margin-bottom: 20px; text-align: center; }
+        .sidebar-header { font-size: 1.5em; font-weight: bold; margin-bottom: 40px; }
         .sidebar-nav ul { list-style: none; padding: 0; margin: 0; }
-        .sidebar-nav li { padding: 15px 10px; border-radius: 8px; margin-bottom: 10px; cursor: pointer; transition: background-color 0.2s; }
+        .sidebar-nav li { padding: 15px 10px; border-radius: 8px; margin-bottom: 10px; cursor: pointer; }
         .sidebar-nav .active { background-color: var(--primary-bg); font-weight: bold; }
         .sidebar-footer { margin-top: auto; padding: 15px 10px; cursor: pointer; border-radius: 8px; }
         
         .header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 15px; border-bottom: 2px solid var(--border-color); margin-bottom: 20px; }
-        h1 { margin: 0; color: var(--primary-bg); border: none; padding: 0; }
-        
-        .pos-container { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; height: calc(100% - 70px); }
-        .product-panel { background-color: var(--card-bg); border-radius: 12px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); display: flex; flex-direction: column; }
-        .product-panel h2 { margin-top: 0; }
-        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; overflow-y: auto; padding: 5px; }
-        .product-card { border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; text-align: center; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
-        .product-card:hover { transform: translateY(-5px); box-shadow: 0 6px 15px rgba(0,0,0,0.1); }
-        .product-name { font-weight: bold; }
-        .product-price { color: var(--accent-green); }
+        h1 { margin: 0; color: var(--primary-bg); }
+        .action-btn { padding: 10px 25px; border-radius: 20px; border: none; color: white; font-weight: bold; cursor: pointer; background-color: var(--accent-green); }
 
-        .order-panel { background-color: var(--card-bg); border-radius: 12px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); display: flex; flex-direction: column; }
-        .order-panel h2 { margin-top: 0; }
-        #order-items-list { flex-grow: 1; overflow-y: auto; }
-        .order-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #eee; }
-        
-        .order-total-section { padding-top: 20px; border-top: 2px solid var(--text-dark); }
-        .total-line { display: flex; justify-content: space-between; font-size: 1.5em; font-weight: bold; margin-bottom: 20px; }
-        
-        .action-btn { width: 100%; padding: 15px; border-radius: 8px; border: none; font-size: 1.1em; font-weight: bold; cursor: pointer; transition: background-color 0.2s; color: white; }
-        .payment-btn { background-color: var(--accent-green); }
-        .clear-btn { background-color: var(--accent-red); margin-top: 10px; }
-        .action-btn:disabled { background-color: #aaa; cursor: not-allowed; }
+        .data-table { width: 100%; border-collapse: collapse; background: var(--card-bg); border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .data-table th, .data-table td { padding: 15px; text-align: left; border-bottom: 1px solid var(--border-color); }
+        .data-table th { background-color: var(--primary-bg); color: var(--text-light); }
+        .data-table tr:last-child td { border-bottom: none; }
         
         /* Modal Styles */
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); justify-content: center; align-items: center; }
         .modal-content { background-color: #fefefe; margin: auto; padding: 30px; border: none; width: 90%; max-width: 500px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
-        .modal h2 { margin-top: 0; }
-        #summary-details p { display: flex; justify-content: space-between; margin: 8px 0; }
-        
-        /* Recent Transactions Table */
-        .data-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        .data-table th, .data-table td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); }
-        .data-table th { background-color: var(--primary-bg); color: var(--text-light); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .modal-header h2 { margin: 0; }
+        .close-btn { font-size: 28px; font-weight: bold; cursor: pointer; color: #aaa; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-weight: 500; margin-bottom: 5px; }
+        .form-group input, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        .modal-footer { text-align: right; margin-top: 25px; }
     </style>
 </head>
 <body>
@@ -80,12 +56,11 @@
     <div class="app-shell">
         <aside class="sidebar">
             <div class="sidebar-header">WeekendMatcha</div>
-            <!-- TIE-IN 1: Display the currently logged-in employee -->
-            <div id="sidebar-user-info" class="sidebar-user"></div>
             <nav class="sidebar-nav">
                 <ul>
+                    <li class="active">Menu Management</li>
                     <li>Inventory</li>
-                    <li class="active">Sales (POS)</li>
+                    <li>Sales Reports</li>
                     <li>Human Resource</li>
                 </ul>
             </nav>
@@ -94,142 +69,116 @@
 
         <main class="main-content">
             <div class="header">
-                 <h1>Point of Sale System</h1>
-                 <button id="view-recent-btn" class="action-btn" style="background-color:var(--accent-blue); width: auto;">View Recent Transactions</button>
+                <h1>Menu Items</h1>
+                <button id="add-item-btn" class="action-btn">Add New Item</button>
             </div>
-            <div class="pos-container">
-                <div class="product-panel"><h2>Select Products</h2><div class="product-grid" id="product-grid"></div></div>
-                <div class="order-panel">
-                    <h2>Current Order</h2>
-                    <div id="order-items-list"></div>
-                    <div class="order-total-section">
-                        <div class="total-line"><span>TOTAL</span><span id="order-total">₱0.00</span></div>
-                        <button id="payment-btn" class="action-btn payment-btn" disabled>Process Payment</button>
-                        <button id="clear-btn" class="action-btn clear-btn" disabled>Clear Order</button>
-                    </div>
-                </div>
-            </div>
+            
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Product ID</th>
+                        <th>Product Name</th>
+                        <th>Price</th>
+                        <th>Recipe / Ingredients</th>
+                    </tr>
+                </thead>
+                <tbody id="menu-items-body">
+                    <!-- Menu items will be dynamically inserted here -->
+                </tbody>
+            </table>
         </main>
     </div>
-    
-    <!-- (Modals remain mostly the same, with small changes to show employee data) -->
-    <div id="payment-modal" class="modal">...</div>
-    <div id="summary-modal" class="modal">
+
+    <!-- Add New Item Modal -->
+    <div id="add-item-modal" class="modal">
         <div class="modal-content">
-            <h2 style="color:var(--accent-green);">Transaction Complete!</h2>
-            <!-- TIE-IN 3: Show which cashier completed the sale -->
-            <p>Processed by: <strong id="summary-employee"></strong></p>
-            <div id="summary-details"></div>
-            <button id="new-order-btn" class="action-btn payment-btn">Start New Order</button>
-        </div>
-    </div>
-    <!-- Recent Transactions Modal (NEW) -->
-    <div id="recent-modal" class="modal">
-        <div class="modal-content" style="max-width: 700px;">
-            <h2>Recent Transactions</h2>
-            <div style="max-height: 400px; overflow-y: auto;">
-                <table class="data-table">
-                    <thead><tr><th>Transaction ID</th><th>Employee</th><th>Total Amount</th><th>Date/Time</th></tr></thead>
-                    <tbody id="recent-transactions-body"></tbody>
-                </table>
+            <div class="modal-header">
+                <h2>Add New Menu Item</h2>
+                <span class="close-btn">&times;</span>
             </div>
-            <button id="close-recent-btn" class="action-btn clear-btn" style="margin-top: 20px;">Close</button>
+            <form id="add-item-form">
+                <div class="form-group">
+                    <label for="product-name">Product Name</label>
+                    <input type="text" id="product-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="product-price">Product Price (₱)</label>
+                    <input type="number" id="product-price" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="product-recipe">Recipe / Ingredients</label>
+                    <textarea id="product-recipe" rows="4" placeholder="e.g., Matcha Powder: 15g, Milk: 200ml, Sugar Syrup: 20ml"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="action-btn">Save Item</button>
+                </div>
+            </form>
         </div>
     </div>
 
     <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // --- MOCK DATABASE (Now includes Employees) ---
-        const employees = [
-            { id: 'EMP1002', name: 'Jane Smith', initials: 'JS' },
-            { id: 'EMP1005', name: 'David Chen', initials: 'DC' }
+        // --- MOCK DATABASE ---
+        let menuProducts = [
+            { id: 1, name: 'Matcha Latte', price: 150.00, recipe: 'Matcha: 15g, Milk: 200ml' },
+            { id: 2, name: 'Hojicha Latte', price: 150.00, recipe: 'Hojicha: 15g, Milk: 200ml' },
+            { id: 3, name: 'Strawberry Matcha', price: 160.00, recipe: 'Matcha: 15g, Milk: 150ml, Strawberry Puree: 50ml' },
         ];
-        const products = [ { id: 1, name: 'Matcha Latte', price: 150.00 }, { id: 2, name: 'Hojicha Latte', price: 150.00 }, { id: 3, name: 'Strawberry Matcha', price: 160.00 }, { id: 4, name: 'Taro Latte', price: 140.00 }];
-        let currentOrder = [];
-        let recentTransactions = [];
 
-        // --- SIMULATE LOGIN STATE ---
-        const loggedInEmployee = employees[0]; // Jane Smith is logged in
+        // --- DOM ELEMENTS ---
+        const menuItemsBody = document.getElementById('menu-items-body');
+        const addItemBtn = document.getElementById('add-item-btn');
+        const addItemModal = document.getElementById('add-item-modal');
+        const closeBtn = document.querySelector('.close-btn');
+        const addItemForm = document.getElementById('add-item-form');
 
-        // --- DOM ELEMENT SELECTORS ---
-        const sidebarUserInfo = document.getElementById('sidebar-user-info');
-        const summaryEmployee = document.getElementById('summary-employee');
-        const viewRecentBtn = document.getElementById('view-recent-btn');
-        const recentModal = document.getElementById('recent-modal');
-        
-        // --- CORE FUNCTIONS ---
-        const renderLoggedInUser = () => {
-            sidebarUserInfo.innerHTML = `
-                <div class="avatar">${loggedInEmployee.initials}</div>
-                <div class="name">${loggedInEmployee.name}</div>
-                <div class="id">ID: ${loggedInEmployee.id}</div>
-            `;
-        };
-        
-        const renderProducts = () => {
-            const productGrid = document.getElementById('product-grid');
-            productGrid.innerHTML = '';
-            products.forEach(p => productGrid.innerHTML += `<div class="product-card" data-id="${p.id}"><div class="product-name">${p.name}</div><div class="product-price">₱${p.price.toFixed(2)}</div></div>`);
-        };
-        
-        const addItemToOrder = (productId) => { /* ... (same as before) ... */ };
-        const renderOrder = () => { /* ... (same as before) ... */ };
-        
-        // --- MODIFIED & NEW FUNCTIONS FOR EMPLOYEE TIE-IN ---
-        const confirmPayment = () => {
-            const totalAmount = currentOrder.reduce((sum, item) => sum + (item.priceAtSale * item.quantity), 0);
-            const amountReceived = 500; // Mock received amount
-            
-            const transaction = {
-                transactionId: Date.now(),
-                // TIE-IN 2: Capture the EmployeeID when creating the Transaction record
-                employeeId: loggedInEmployee.id, 
-                transactionDateTime: new Date(),
-                totalAmount: totalAmount,
-                items: [...currentOrder]
-            };
-            recentTransactions.push(transaction);
-            
-            // Populate summary modal with employee name
-            summaryEmployee.textContent = `${loggedInEmployee.name} (${loggedInEmployee.id})`;
-            
-            // ... (rest of summary logic)
-            document.getElementById('summary-modal').style.display = 'flex';
-            currentOrder = [];
-            renderOrder();
-        };
-
-        const renderRecentTransactions = () => {
-            const tbody = document.getElementById('recent-transactions-body');
-            tbody.innerHTML = '';
-            // TIE-IN 4: Displaying the employee associated with each past transaction
-            recentTransactions.slice().reverse().forEach(t => {
-                // Look up employee name from ID
-                const employee = employees.find(e => e.id === t.employeeId);
-                tbody.innerHTML += `
+        // --- FUNCTIONS ---
+        const renderMenuItems = () => {
+            menuItemsBody.innerHTML = '';
+            menuProducts.forEach(product => {
+                menuItemsBody.innerHTML += `
                     <tr>
-                        <td>${t.transactionId}</td>
-                        <td>${employee ? employee.name : 'Unknown'}</td>
-                        <td>₱${t.totalAmount.toFixed(2)}</td>
-                        <td>${t.transactionDateTime.toLocaleTimeString()}</td>
+                        <td>PROD-${product.id.toString().padStart(4, '0')}</td>
+                        <td>${product.name}</td>
+                        <td>₱${product.price.toFixed(2)}</td>
+                        <td>${product.recipe}</td>
                     </tr>
                 `;
             });
         };
-
-        // --- EVENT BINDINGS ---
-        viewRecentBtn.addEventListener('click', () => {
-            renderRecentTransactions();
-            recentModal.style.display = 'flex';
-        });
-        document.getElementById('close-recent-btn').addEventListener('click', () => recentModal.style.display = 'none');
-        document.getElementById('product-grid').addEventListener('click', e => { /* ... */ });
-        document.getElementById('payment-btn').addEventListener('click', confirmPayment); // Simplified for demo
         
-        // --- INITIALIZATION ---
-        renderLoggedInUser();
-        renderProducts();
-        renderOrder();
+        const openModal = () => { addItemModal.style.display = 'flex'; };
+        const closeModal = () => { addItemModal.style.display = 'none'; };
+
+        // --- EVENT HANDLERS ---
+        addItemBtn.addEventListener('click', openModal);
+        closeBtn.addEventListener('click', closeModal);
+        window.addEventListener('click', (e) => {
+            if (e.target == addItemModal) closeModal();
+        });
+
+        addItemForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // Get data from the form
+            const newProduct = {
+                id: menuProducts.length + 1, // Simple ID generation
+                name: document.getElementById('product-name').value,
+                price: parseFloat(document.getElementById('product-price').value),
+                recipe: document.getElementById('product-recipe').value,
+            };
+            
+            // Add to our mock database
+            menuProducts.push(newProduct);
+            
+            // Re-render the table and close the modal
+            renderMenuItems();
+            closeModal();
+            addItemForm.reset();
+        });
+
+        // --- INITIAL RENDER ---
+        renderMenuItems();
     });
     </script>
 </body>
