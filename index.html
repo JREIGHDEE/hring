@@ -259,7 +259,12 @@
             lastTransaction = {
                 id: Date.now().toString().slice(-6),
                 customerName: document.getElementById('customer-name').value || 'Guest',
-                items: [...currentOrder], total, cashPaid: cashReceived, change: cashReceived - totalAmount, cashier: loggedInEmployee.name, date: new Date()
+                items: [...currentOrder],
+                total: totalAmount,
+                cashPaid: cashReceived,
+                change: cashReceived - totalAmount,
+                cashier: loggedInEmployee.name,
+                date: new Date()
             };
             document.getElementById('summary-tid').textContent = lastTransaction.id;
             document.getElementById('summary-name').textContent = lastTransaction.customerName;
