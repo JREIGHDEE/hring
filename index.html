@@ -22,9 +22,9 @@
         body { margin: 0; font-family: 'Poppins', sans-serif; background-color: var(--main-bg); display: flex; justify-content: center; align-items: center; height: 100vh; }
         .hidden { display: none !important; }
 
-        .app-shell { width: 1200px; height: 800px; background-color: #333; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); display: flex; padding: 20px; box-sizing: border-box; }
+        .app-shell { width: 1200px; height: 800px; background-color: var(--main-bg); border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); display: flex; padding: 20px; box-sizing: border-box; }
 
-        /* --- Sidebar & Common Elements --- */
+        /* --- Sidebar --- */
         .sidebar { width: 250px; background-color: var(--primary-green); border-radius: 15px; padding: 25px; display: flex; flex-direction: column; color: var(--text-light); flex-shrink: 0; }
         .sidebar-header .logo { font-size: 1.8em; font-weight: 700; text-align:center; margin-bottom: 30px;}
         .user-info .avatar { width: 80px; height: 80px; background-color: #fff; color: var(--primary-green); border-radius: 50%; margin: 0 auto 15px auto; display: flex; align-items: center; justify-content: center; font-size: 2.5em; font-weight: 600; }
@@ -47,19 +47,26 @@
         .product-card { text-align: center; cursor: pointer; }
         .product-card .name { font-weight: 600; }
         .product-card .price { color: var(--text-muted); }
+        
         .current-order-panel { background: var(--card-bg); border-radius: 10px; padding: 20px; display: flex; flex-direction: column; }
+        .current-order-panel h2 { margin-top: 0; }
         #order-items-list { flex-grow: 1; overflow-y: auto; }
+        .order-item { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; }
+        .order-item-info .name { font-weight: 600; }
+        .order-item-info .price { color: var(--text-muted); font-size: 0.9em; }
+        .qty-controls { display: flex; align-items: center; gap: 10px; }
+        .qty-btn { width: 24px; height: 24px; border: 1px solid var(--border-color); background: none; border-radius: 50%; cursor: pointer; }
+        .order-item-total { font-weight: 600; }
         .order-summary { margin-top: auto; padding-top: 20px; border-top: 2px solid var(--border-color); }
         .total-line { display: flex; justify-content: space-between; font-size: 1.5em; font-weight: 700; margin-bottom: 20px; }
         .action-btn { width: 100%; padding: 15px; border-radius: 10px; border: none; font-size: 1.1em; font-weight: 600; cursor: pointer; color: white; margin-top: 10px; }
         .process-btn { background-color: var(--btn-disabled); }
-        .cancel-btn { background-color: var(--btn-disabled); }
+        .cancel-btn { background-color: var(--btn-red); }
         
         /* --- MODAL STYLES --- */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; z-index: 1000; }
         .modal-content { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.2);}
         
-        /* Payment Modal Specifics */
         #payment-modal .modal-content { width: 400px; }
         #payment-modal h2 { margin-top: 0; text-align: center; }
         .form-group { margin-bottom: 15px; }
@@ -74,20 +81,12 @@
         .modal-actions .confirm-btn { background-color: var(--btn-disabled); }
         .modal-actions .confirm-btn.active { background-color: var(--btn-green); }
 
-        /* Summary Modal Specifics */
         #summary-modal .modal-content { width: 400px; text-align: center; }
         .summary-details { text-align: left; margin: 25px 0; font-size: 1.1em; }
         .summary-details div { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; }
         .summary-details .total { font-weight: 700; }
 
-        /* Receipt Modal Specifics */
-        #receipt-modal .modal-content {
-            width: 320px;
-            padding: 20px;
-            background: #fdfdfd;
-            font-family: 'Courier New', Courier, monospace;
-            color: #000;
-        }
+        #receipt-modal .modal-content { width: 320px; padding: 20px; background: #fdfdfd; font-family: 'Courier New', Courier, monospace; color: #000; }
         .receipt { text-align: center; }
         .receipt-header h3, .receipt-header p { margin: 0; }
         .receipt-divider { border-top: 1px dashed #000; margin: 15px 0; }
@@ -100,29 +99,42 @@
 </head>
 <body>
     <div class="app-shell">
-        <aside class="sidebar"> <!-- Unchanged from previous code --> </aside>
-        <main id="pos-ordering-page" class="main-content"> <!-- Unchanged from previous code --> </main>
+        <aside class="sidebar">
+            <div class="sidebar-header"><span class="logo">WeekendMatcha</span></div>
+            <div id="user-info" class="user-info"></div>
+            <nav class="sidebar-nav"><ul><li class="active">POS</li><li>Current Orders</li></ul></nav>
+            <div class="sidebar-footer">&#8592; Log Out</div>
+        </aside>
+
+        <main id="pos-ordering-page" class="main-content">
+            <div class="main-header"><h1>Point of Sale System</h1></div>
+            <div class="pos-grid">
+                <div class="products-panel">
+                    <div class="product-grid" id="product-grid"></div>
+                </div>
+                <div class="current-order-panel">
+                    <h2>Current Order</h2>
+                    <div id="order-items-list"></div>
+                    <div class="order-summary">
+                        <div class="total-line"><span>TOTAL</span><span id="order-total">₱0.00</span></div>
+                        <button class="action-btn process-btn" id="process-payment-btn">Process Payment</button>
+                        <button class="action-btn cancel-btn" id="cancel-order-btn">Cancel Order</button>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
 
     <!-- MODALS -->
     <div id="payment-modal" class="modal-overlay hidden">
         <div class="modal-content">
             <h2>Process Payment</h2>
-            <div class="form-group">
-                <label for="customer-name">Name of Customer</label>
-                <input type="text" id="customer-name">
-            </div>
-            <div class="form-group">
-                <label>Total Amount</label>
-                <input type="text" id="total-due-display" class="read-only" readonly>
-            </div>
-            <div class="form-group">
-                <label for="cash-received">Cash Received</label>
-                <input type="number" id="cash-received" placeholder="0.00">
-            </div>
+            <div class="form-group"><label for="customer-name">Name of Customer</label><input type="text" id="customer-name"></div>
+            <div class="form-group"><label>Total Amount</label><input type="text" id="total-due-display" class="read-only" readonly></div>
+            <div class="form-group"><label for="cash-received">Cash Received</label><input type="number" id="cash-received" placeholder="0.00"></div>
             <div class="change-display" id="change-due">Change: ₱0.00</div>
             <div class="modal-actions">
-                <button id="cancel-payment-btn" class="action-btn" style="background-color:var(--btn-red);">Cancel Order</button>
+                <button id="cancel-payment-btn" class="action-btn" style="background-color:var(--btn-red);">Cancel</button>
                 <button id="confirm-payment-btn" class="action-btn confirm-btn" disabled>Confirm</button>
             </div>
         </div>
@@ -145,13 +157,10 @@
 
     <div id="receipt-modal" class="modal-overlay hidden">
         <div class="modal-content">
-            <div class="receipt" id="receipt-content">
-                <!-- Receipt will be generated here by JS -->
-            </div>
+            <div class="receipt" id="receipt-content"></div>
             <button id="close-receipt-btn" class="action-btn" style="background-color:var(--btn-red);margin-top:20px;">Close</button>
         </div>
     </div>
-
 
     <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -162,14 +171,64 @@
         let lastTransaction = null;
         
         // --- DOM ELEMENTS ---
+        const userInfo = document.getElementById('user-info');
+        const productGrid = document.getElementById('product-grid');
+        const orderItemsList = document.getElementById('order-items-list');
+        const orderTotalDisplay = document.getElementById('order-total');
+        const processPaymentBtn = document.getElementById('process-payment-btn');
+        const cancelOrderBtn = document.getElementById('cancel-order-btn');
+        
         const paymentModal = document.getElementById('payment-modal');
         const summaryModal = document.getElementById('summary-modal');
         const receiptModal = document.getElementById('receipt-modal');
 
         // --- RENDER FUNCTIONS ---
-        const renderCurrentOrder = () => { /* ... (same as before, updates total and item list) ... */ };
+        const renderUser = () => { userInfo.innerHTML = `<div class="avatar">${loggedInEmployee.initials}</div><div class="name">${loggedInEmployee.name}</div><div class="id">ID: ${loggedInEmployee.id}</div>`; };
+        const renderProducts = () => { products.forEach(p => { productGrid.innerHTML += `<div class="product-card" data-id="${p.id}"><img src="${p.img}" alt="${p.name}"><div class="name">${p.name}</div><div class="price">₱${p.price.toFixed(2)}</div></div>`; }); };
+
+        const renderCurrentOrder = () => {
+            orderItemsList.innerHTML = '';
+            let total = 0;
+            if (currentOrder.length === 0) {
+                orderItemsList.innerHTML = `<p style="text-align:center;color:#aaa;">No items in order.</p>`;
+            } else {
+                currentOrder.forEach(item => {
+                    const product = products.find(p => p.id === item.id);
+                    const itemTotal = product.price * item.qty;
+                    total += itemTotal;
+                    orderItemsList.innerHTML += `
+                        <div class="order-item">
+                            <div class="order-item-info"><div class="name">${product.name}</div><div class="price">₱${product.price.toFixed(2)}</div></div>
+                            <div class="qty-controls">
+                                <button class="qty-btn" onclick="adjustQty(${item.id}, -1)">-</button>
+                                <span>${item.qty}</span>
+                                <button class="qty-btn" onclick="adjustQty(${item.id}, 1)">+</button>
+                            </div>
+                            <div class="order-item-total">₱${itemTotal.toFixed(2)}</div>
+                        </div>`;
+                });
+            }
+            orderTotalDisplay.textContent = `₱${total.toFixed(2)}`;
+            processPaymentBtn.style.backgroundColor = currentOrder.length > 0 ? var(--primary-green) : var(--btn-disabled);
+        };
         
         // --- CORE LOGIC ---
+        window.adjustQty = (productId, amount) => {
+            const item = currentOrder.find(i => i.id === productId);
+            if (item) {
+                item.qty += amount;
+                if (item.qty <= 0) currentOrder = currentOrder.filter(i => i.id !== productId);
+            }
+            renderCurrentOrder();
+        };
+
+        const addItemToOrder = (productId) => {
+            const existingItem = currentOrder.find(item => item.id === productId);
+            if (existingItem) existingItem.qty++;
+            else currentOrder.push({ id: productId, qty: 1 });
+            renderCurrentOrder();
+        };
+
         const openPaymentModal = () => {
             const total = currentOrder.reduce((sum, item) => sum + (products.find(p=>p.id===item.id).price * item.qty), 0);
             if (total <= 0) return;
@@ -180,76 +239,28 @@
             document.getElementById('change-due').className = 'change-display';
             document.getElementById('confirm-payment-btn').disabled = true;
             document.getElementById('confirm-payment-btn').classList.remove('active');
-            paymentModal.classList.remove('hidden');
+            openModal(paymentModal);
         };
 
         const processTransaction = () => {
             const totalAmount = currentOrder.reduce((sum, item) => sum + (products.find(p => p.id === item.id).price * item.qty), 0);
             const cashReceived = parseFloat(document.getElementById('cash-received').value);
-            
-            lastTransaction = {
-                id: Date.now().toString().slice(-6),
-                customerName: document.getElementById('customer-name').value || 'Guest',
-                items: [...currentOrder],
-                total: totalAmount,
-                cashPaid: cashReceived,
-                change: cashReceived - totalAmount,
-                cashier: loggedInEmployee.name,
-                date: new Date()
-            };
-
-            // Show summary
+            lastTransaction = { id: Date.now().toString().slice(-6), customerName: document.getElementById('customer-name').value || 'Guest', items: [...currentOrder], total: totalAmount, cashPaid: cashReceived, change: cashReceived - totalAmount, cashier: loggedInEmployee.name, date: new Date() };
             document.getElementById('summary-tid').textContent = lastTransaction.id;
             document.getElementById('summary-name').textContent = lastTransaction.customerName;
             document.getElementById('summary-total').textContent = `₱${lastTransaction.total.toFixed(2)}`;
             document.getElementById('summary-cash').textContent = `₱${lastTransaction.cashPaid.toFixed(2)}`;
             document.getElementById('summary-change').textContent = `₱${lastTransaction.change.toFixed(2)}`;
-            
             closeModal(paymentModal);
             openModal(summaryModal);
-            
-            // Reset for next order
             currentOrder = [];
             renderCurrentOrder();
         };
 
         const generateReceipt = () => {
             const receiptContent = document.getElementById('receipt-content');
-            const itemsHtml = lastTransaction.items.map(item => {
-                const product = products.find(p => p.id === item.id);
-                return `
-                    <tr>
-                        <td>${item.qty}x ${product.name}</td>
-                        <td>₱${(product.price * item.qty).toFixed(2)}</td>
-                    </tr>`;
-            }).join('');
-            
-            receiptContent.innerHTML = `
-                <div class="receipt-header">
-                    <h3>WeekendMatcha</h3>
-                    <p>123 Matcha Lane, Flavor Town</p>
-                    <p>${lastTransaction.date.toLocaleString()}</p>
-                </div>
-                <div class="receipt-divider"></div>
-                <p>Cashier: ${lastTransaction.cashier}</p>
-                <p>Customer: ${lastTransaction.customerName}</p>
-                <p>Order ID: ${lastTransaction.id}</p>
-                <div class="receipt-divider"></div>
-                <div class="receipt-items">
-                    <table>
-                        <thead><tr><th>Item</th><th>Price</th></tr></thead>
-                        <tbody>${itemsHtml}</tbody>
-                    </table>
-                </div>
-                <div class="receipt-divider"></div>
-                <div class="receipt-footer">
-                    <div><span>Total:</span><span>₱${lastTransaction.total.toFixed(2)}</span></div>
-                    <div><span>Cash Paid:</span><span>₱${lastTransaction.cashPaid.toFixed(2)}</span></div>
-                    <div><span>Change:</span><span>₱${lastTransaction.change.toFixed(2)}</span></div>
-                </div>
-                <div class="receipt-divider"></div>
-                <p>Thank you for your purchase!</p>
-            `;
+            const itemsHtml = lastTransaction.items.map(item => { const product = products.find(p => p.id === item.id); return `<tr><td>${item.qty}x ${product.name}</td><td>₱${(product.price * item.qty).toFixed(2)}</td></tr>`; }).join('');
+            receiptContent.innerHTML = `<div class="receipt-header"><h3>WeekendMatcha</h3><p>123 Matcha Lane, Flavor Town</p><p>${lastTransaction.date.toLocaleString()}</p></div><div class="receipt-divider"></div><p>Cashier: ${lastTransaction.cashier}</p><p>Customer: ${lastTransaction.customerName}</p><p>Order ID: ${lastTransaction.id}</p><div class="receipt-divider"></div><div class="receipt-items"><table><thead><tr><th>Item</th><th>Price</th></tr></thead><tbody>${itemsHtml}</tbody></table></div><div class="receipt-divider"></div><div class="receipt-footer"><div><span>Total:</span><span>₱${lastTransaction.total.toFixed(2)}</span></div><div><span>Cash Paid:</span><span>₱${lastTransaction.cashPaid.toFixed(2)}</span></div><div><span>Change:</span><span>₱${lastTransaction.change.toFixed(2)}</span></div></div><div class="receipt-divider"></div><p>Thank you for your purchase!</p>`;
             openModal(receiptModal);
         };
         
@@ -257,7 +268,9 @@
         const closeModal = (modal) => modal.classList.add('hidden');
 
         // --- EVENT LISTENERS ---
-        document.getElementById('process-btn').addEventListener('click', openPaymentModal); // Assuming a button with id 'process-btn' exists
+        productGrid.addEventListener('click', e => { const card = e.target.closest('.product-card'); if (card) addItemToOrder(parseInt(card.dataset.id)); });
+        processPaymentBtn.addEventListener('click', openPaymentModal);
+        cancelOrderBtn.addEventListener('click', () => { currentOrder = []; renderCurrentOrder(); });
         document.getElementById('cancel-payment-btn').addEventListener('click', () => closeModal(paymentModal));
         document.getElementById('confirm-payment-btn').addEventListener('click', processTransaction);
         
@@ -267,18 +280,8 @@
             const change = cash - total;
             const changeDueEl = document.getElementById('change-due');
             const confirmBtn = document.getElementById('confirm-payment-btn');
-
-            if (change >= 0) {
-                changeDueEl.textContent = `Change: ₱${change.toFixed(2)}`;
-                changeDueEl.className = 'change-display sufficient';
-                confirmBtn.disabled = false;
-                confirmBtn.classList.add('active');
-            } else {
-                changeDueEl.textContent = 'Insufficient Amount';
-                changeDueEl.className = 'change-display insufficient';
-                confirmBtn.disabled = true;
-                confirmBtn.classList.remove('active');
-            }
+            if (change >= 0) { changeDueEl.textContent = `Change: ₱${change.toFixed(2)}`; changeDueEl.className = 'change-display sufficient'; confirmBtn.disabled = false; confirmBtn.classList.add('active'); }
+            else { changeDueEl.textContent = 'Insufficient Amount'; changeDueEl.className = 'change-display insufficient'; confirmBtn.disabled = true; confirmBtn.classList.remove('active'); }
         });
         
         document.getElementById('print-receipt-btn').addEventListener('click', generateReceipt);
@@ -286,8 +289,9 @@
         document.getElementById('close-receipt-btn').addEventListener('click', () => closeModal(receiptModal));
         
         // --- INITIAL RENDER ---
-        // Assume renderCurrentOrder and other setup functions exist and are called
-        // ...
+        renderUser();
+        renderProducts();
+        renderCurrentOrder();
     });
     </script>
 </body>
